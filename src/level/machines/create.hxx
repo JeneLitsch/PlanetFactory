@@ -11,7 +11,7 @@ namespace level {
 		MachineEcs & ecs,
 		std::vector<stx::position2i> steps
 	);
-	
+
 	Machine & new_miner(
 		MachineEcs & ecs,
 		stx::position2i xy,

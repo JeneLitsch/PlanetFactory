@@ -9,6 +9,12 @@ namespace level {
 	: tiles{size, Tile{rock}}, machines{1}, tick {0.5} {
 		std::mt19937_64 rng{seed};
 
+		auto & miner = new_miner(this->machines, {4,5}, item_blue);
+		auto & miner2 = new_miner(this->machines, {7,4}, item_blue);
+		auto & assembler = new_assembler(this->machines, {14,5}, item_blue, item_yellow); 
+		auto & sink = new_sink(this->machines, {14,14}); 
+		auto & sink2 = new_sink(this->machines, {17,9}); 
+
 		auto belt_a = new_conveyor_belt(this->machines, {
 			{5,5},{6,5}, {7,5}, {8,5}, {9,5}, {10,5}, {11,5}, {12,5}, {13,5},
 		});
@@ -24,16 +30,19 @@ namespace level {
 			{14,13},
 		});
 
-		auto & miner = new_miner(this->machines, {4,5}, item_blue);
-		auto & miner2 = new_miner(this->machines, {5,4}, item_blue);
-		auto & assembler = new_assembler(this->machines, {14,5}, item_blue, item_yellow); 
-		auto & sink = new_sink(this->machines, {14,14}); 
+		auto belt_c = new_conveyor_belt(this->machines, {
+			{15,9},
+			{16,9},
+		});
+
 
 		connect(miner, belt_a.front());
-		connect(miner2, belt_a.front());
+		connect(miner2, belt_a[2]);
 		connect(belt_a.back(), assembler);
 		connect(assembler, belt_b.front());
 		connect(belt_b.back(), sink);
+		connect(belt_b[3], belt_c.front());
+		connect(belt_c.back(), sink2);
 	}
 
 
@@ -43,7 +52,7 @@ namespace level {
 			machines.run_system(produce_sink);
 			machines.run_system(produce_recipe);
 			auto order = determine_transfer_order(this->machines);
-			// std::cout << stx::whole(order) << "\n";
+			std::cout << stx::whole(order) << "\n";
 			machines.run_system_for(order, [&] (Machine & machine) {
 				return item_transfer(machine, this->machines);
 			});

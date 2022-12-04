@@ -11,7 +11,10 @@ namespace level {
 		if(!connects) return;
 
 		// Expired/non-existing machine
-		auto * connected_machine =  machines.get_if(connects->machine_id);
+		if(connects->machine_ids.empty()) return;
+		const auto output = connects->next_output;
+		Machine * connected_machine = machines.get_if(connects->machine_ids[output]);
+		// std::cout << output << "\n";
 		if(!connected_machine) return;
 
 		// No storage
@@ -29,6 +32,9 @@ namespace level {
 
 		connected_storage->item = storage->item;
 		storage->item = stx::nullref;
+
+		connects->next_output += 1;
+		connects->next_output %= connects->machine_ids.size();
 	}
 
 
@@ -50,7 +56,11 @@ namespace level {
 			machines.run_system([&] (const Machine & machine) {
 				auto * connects_to = machine.get_if<Connects>();
 				if(!connects_to) return;
-				if(!visited.contains(connects_to->machine_id)) return;
+				bool connected_is_visited = true;
+				for(const auto id : connects_to->machine_ids) {
+					connected_is_visited &= visited.contains(id);
+				}
+				if(!connected_is_visited) return;
 				if(visited.contains(machine.get_id())) return;
 				order.push_back(machine.get_id());
 				visited.insert(machine.get_id());

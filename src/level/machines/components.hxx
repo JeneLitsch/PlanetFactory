@@ -17,7 +17,8 @@ namespace level {
 	};
 
 	struct Connects {
-		std::uint64_t machine_id;
+		std::vector<std::uint64_t> machine_ids;
+		std::size_t next_output;
 	};
 
 	struct Sink {

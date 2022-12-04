@@ -2,9 +2,14 @@
 
 namespace level {
 	void connect(Machine & from, const Machine & to) {
-		from.add(Connects{
-			.machine_id = to.get_id()
-		});
+		if(!from.has<Connects>()) {
+			from.add(Connects{
+				.machine_ids = {},
+				.next_output = 0,
+			});
+		}
+		auto & connects = from.get<Connects>();
+		connects.machine_ids.push_back(to.get_id());
 	}
 
 	Machine & new_conveyor(MachineEcs & ecs, stx::position2i xy) {
@@ -57,7 +62,7 @@ namespace level {
 		});
 		machine.add(Source{
 			.item = item,
-			.frequency = 4,
+			.frequency = 2,
 			.tick_counter = 0,
 		});
 		return machine;
