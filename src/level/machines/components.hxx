@@ -30,4 +30,11 @@ namespace level {
 		std::uint64_t frequency;
 		std::uint64_t tick_counter;
 	};
+
+	struct Recipe {
+		stx::reference<const Item> from;
+		stx::reference<const Item> to;
+		std::uint64_t frequency;
+		std::uint64_t tick_counter;
+	};
 }

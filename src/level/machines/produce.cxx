@@ -37,4 +37,20 @@ namespace level {
 			storage->item = stx::nullref;
 		}
 	}
+
+
+	void produce_recipe(Machine & machine) {
+		auto * recipe = machine.get_if<Recipe>();
+		auto * storage = machine.get_if<Storage>();
+
+		if(!recipe) return;
+		if(!storage) return;
+		if(!storage->item) return;
+
+		if(is_ready(*recipe)) {
+			if(&*storage->item == &*recipe->from) {
+				storage->item = *recipe->to;
+			}
+		}
+	}
 }

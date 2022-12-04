@@ -9,7 +9,8 @@ namespace level {
 		Sprite,
 		Connects,
 		Source,
-		Sink
+		Sink,
+		Recipe
 	>;
 
 	using Machine = MachineEcs::Entity;
