@@ -1,0 +1,6 @@
+[submodule "libs/stdxx"]
+	path = libs/stdxx
+	url = git@github.com:JeneLitsch/stdxx.git
+[submodule "libs/nanocomp"]
+	path = libs/nanocomp
+	url = git@github.com:JeneLitsch/nanocomp.git
