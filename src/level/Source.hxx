@@ -17,12 +17,7 @@ namespace level {
 
 		virtual bool is_done() const override;		
 	private:
-		void fetch();
-		void produce();
-
 		stx::optref<const Item> produced_item;
-		stx::optref<const Item> input_item;
-		stx::optref<const Item> temp_item;
 		stx::optref<const Item> output_item;
 
 		bool fetching_done = false;

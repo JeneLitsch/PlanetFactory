@@ -15,38 +15,12 @@ namespace level {
 
 
 	void Source::tick_main() {
-		if(!this->fetching_done) {
-			this->fetch();
-		} 
-
-		if(!this->production_done) {
-			this->produce();
-		} 
-	}
-
-
-
-	void Source::fetch() {
-		this->fetching_done = true;
-	}
-
-
-
-	void Source::produce() {
-		if(!this->temp_item) {
-			this->temp_item = this->produced_item;
-			this->input_item = stx::nullref;
-			this->production_done = true;
-		}
 	}
 
 
 
 	void Source::tick_post() {
-		if(this->temp_item) {
-			this->output_item = this->temp_item;
-		}
-		this->temp_item = stx::nullref;
+		this->output_item = this->produced_item;
 	}
 
 	
@@ -80,6 +54,6 @@ namespace level {
 
 
 	bool Source::is_done() const {
-		return this->fetching_done && this->production_done;
+		return true;
 	}
 }

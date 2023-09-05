@@ -16,4 +16,8 @@ namespace level {
 	inline const Item item_yellow {
 		.color = sf::Color::Yellow,
 	};
+
+	inline const Item item_red {
+		.color = sf::Color::Red,
+	};
 }

@@ -50,9 +50,12 @@ namespace level {
 			}
 
             std::size_t tries = std::size(this->machines);
-            while (std::any_of(std::begin(this->machines), std::end(this->machines), [] (auto & m) {
-				return !m->is_done();
-			}) && tries > 0) {
+
+			auto begin = std::begin(this->machines);
+			auto end = std::end(this->machines);
+			auto machine_done = [] (auto & m) { return m->is_done(); };
+
+            while (!std::all_of(begin, end, machine_done) && tries > 0) {
                 --tries;
 				for(auto & m : machines) {
 					m->tick_main();
