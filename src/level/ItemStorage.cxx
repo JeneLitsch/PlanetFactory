@@ -9,7 +9,7 @@ namespace level {
 	
 	std::int32_t ItemStorage::store(stx::reference<const Item> item, std::int32_t amount) {
 		for(auto & slot : this->slots) {
-			if(slot.get_item() == item) {
+			if(slot.get_item() == *item) {
 				amount = slot.store(amount);
 			}
 		}
@@ -20,7 +20,7 @@ namespace level {
 
 	std::int32_t ItemStorage::retrieve(stx::reference<const Item> item, std::int32_t amount) {
 		for(auto & slot : this->slots) {
-			if(slot.get_item() == item) {
+			if(slot.get_item() == *item) {
 				amount = slot.retrieve(amount);
 			}
 		}
@@ -32,7 +32,7 @@ namespace level {
 	std::int32_t ItemStorage::get_amount(stx::reference<const Item> item) const {
 		std::int32_t amount = 0;
 		for(auto & slot : this->slots) {
-			if(slot.get_item() == item) {
+			if(slot.get_item() == *item) {
 				amount += slot.get_amount();
 			}
 		}

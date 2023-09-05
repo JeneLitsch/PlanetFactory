@@ -6,16 +6,9 @@
 #include "level/machinery/Conveyor.hxx"
 #include "level/machinery/Source.hxx"
 #include "level/machinery/Assembler.hxx"
+#include "level/machinery/Stockpile.hxx"
 
 namespace level {
-	const Recipe yellow_to_red {
-		.from = {
-			item_yellow,
-			item_blue,
-		},
-		.to = item_red,
-	};
-
 	Level::Level(stx::size2u size, std::uint64_t seed) 
 	: tiles{size, Tile{rock}}, tick {0.5} {
 		std::mt19937_64 rng{seed};
@@ -55,8 +48,19 @@ namespace level {
 		prev = *this->machines.back();
 
 
-		for(int i = 0; i < 15; i++) {
+		for(int i = 0; i < 10; i++) {
 			this->machines.push_back(std::make_unique<Conveyor>(stx::position2i{12 + i, 3}));
+			stx::reference<Machine> m = *this->machines.back();
+			m->link(prev);
+			prev = m;
+		}
+
+		this->machines.push_back(std::make_unique<Stockpile>(stx::position2i{22, 3}));
+		this->machines.back()->link(prev);
+		prev = *this->machines.back();
+
+		for(int i = 0; i < 5; i++) {
+			this->machines.push_back(std::make_unique<Conveyor>(stx::position2i{23 + i, 3}));
 			stx::reference<Machine> m = *this->machines.back();
 			m->link(prev);
 			prev = m;

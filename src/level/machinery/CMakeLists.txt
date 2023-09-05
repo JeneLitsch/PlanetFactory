@@ -5,4 +5,5 @@ target_sources(level PRIVATE
 	Machine.cxx
 	Assembler.cxx
 	Source.cxx
+	Stockpile.cxx
 )

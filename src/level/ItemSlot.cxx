@@ -1,8 +1,14 @@
 #include "ItemSlot.hxx"
 
 namespace level {
+	ItemSlot::ItemSlot()
+		: item {stx::nullref}
+		, capacity{0}
+		, amount{0} {}
+
+
 	ItemSlot::ItemSlot(stx::reference<const Item> item, std::int32_t capacity)
-		: item {item}
+		: item {*item}
 		, capacity{capacity}
 		, amount{0} {}
 
@@ -59,7 +65,7 @@ namespace level {
 
 
 
-	stx::reference<const Item> ItemSlot::get_item() const {
+	stx::optref<const Item> ItemSlot::get_item() const {
 		return this->item;
 	}
 }

@@ -5,6 +5,7 @@
 namespace level {
 	class ItemSlot {
 	public:
+		ItemSlot();
 		ItemSlot(stx::reference<const Item> item, std::int32_t capacity);
 		[[no_discard]] std::int32_t store(std::int32_t amount);
 		[[no_discard]] std::int32_t retrieve(std::int32_t amount);
@@ -14,9 +15,9 @@ namespace level {
 		bool is_empty() const;
 		bool is_full() const;
 
-		stx::reference<const Item> get_item() const;
+		stx::optref<const Item> get_item() const;
 	private:
-		stx::reference<const Item> item;
+		stx::optref<const Item> item;
 		std::int32_t capacity;
 		std::int32_t amount;
 	};
