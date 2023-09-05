@@ -10,6 +10,7 @@ namespace level {
 	void Source::tick_pre() {
 		this->fetching_done = false;
 		this->production_done = false;
+		counter++;
 	}
 
 
@@ -20,7 +21,9 @@ namespace level {
 
 
 	void Source::tick_post() {
-		this->output_item = this->produced_item;
+		if(counter % 4 == 0) {
+			this->output_item = this->produced_item;
+		}
 	}
 
 	

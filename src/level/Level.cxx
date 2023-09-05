@@ -55,7 +55,7 @@ namespace level {
 		prev = *this->machines.back();
 
 
-		for(int i = 0; i < 10; i++) {
+		for(int i = 0; i < 15; i++) {
 			this->machines.push_back(std::make_unique<Conveyor>(stx::position2i{12 + i, 3}));
 			stx::reference<Machine> m = *this->machines.back();
 			m->link(prev);

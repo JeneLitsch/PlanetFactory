@@ -4,7 +4,12 @@ namespace level {
 	Assembler::Assembler(
 		stx::position2i position, stx::reference<const Recipe> recipe) 
 		: Machine{position}
-		, recipe{recipe} {}
+		, recipe{recipe} {
+
+		for(const auto & from : recipe->from) {
+			this->input_items.add_slot(ItemSlot{from, 1});
+		}
+	}
 
 
 
@@ -32,22 +37,20 @@ namespace level {
 		if(!std::empty(this->input_ports) && !this->output_item) {
 			auto & input = *this->input_ports[this->input_index];
 			if(auto item = input.peek_output()) {
-				if(!this->input_items.contains(item)) {
+				if(input_items.store(*item, 1) == 0) {
 					input.clear_output();
-					this->input_items.insert(item);
 				}
+				this->fetching_done = true;
+				this->input_items.print(); std::cout << "\n";
 			}
 		}
-		this->fetching_done = true;
 	}
 
 
 
 	bool Assembler::verify_recipe() const {
-		for(const auto & needed : this->recipe->from) {
-			const auto begin = std::begin(this->input_items);
-			const auto end = std::end(this->input_items);
-			if(!std::any_of(begin, end, [&] (auto & i) { return *i == needed; })) {
+		for(const auto & from : this->recipe->from) {
+			if(this->input_items.get_amount(from) == 0) {
 				return false;
 			}
 		}
@@ -61,7 +64,7 @@ namespace level {
 			if(this->verify_recipe()) {
 				this->temp_item = *this->recipe->to;
 				for(const auto & needed : this->recipe->from) {
-					this->input_items.erase(*needed);
+					this->input_items.retrieve(*needed, 1);
 				}
 				this->production_done = true;
 			}
@@ -75,6 +78,7 @@ namespace level {
 			this->output_item = this->temp_item;
 		}
 		this->temp_item = stx::nullref;
+
 	}
 
 	

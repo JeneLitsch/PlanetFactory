@@ -6,7 +6,8 @@ namespace level {
 	class ItemSlot {
 	public:
 		ItemSlot(stx::reference<const Item> item, std::int32_t capacity);
-		void exchange(std::int32_t amount);
+		[[no_discard]] std::int32_t store(std::int32_t amount);
+		[[no_discard]] std::int32_t retrieve(std::int32_t amount);
 
 		std::int32_t get_amount() const;
 		std::int32_t get_capacity() const;

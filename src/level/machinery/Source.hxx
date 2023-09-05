@@ -24,5 +24,7 @@ namespace level {
 
 		bool fetching_done = false;
 		bool production_done = false;
+
+		std::uint32_t counter = 0;
 	};
 }

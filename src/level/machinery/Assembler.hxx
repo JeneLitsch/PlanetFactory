@@ -2,6 +2,8 @@
 #include <set>
 #include "Machine.hxx"
 #include "level/Recipe.hxx"
+#include "level/ItemSlot.hxx"
+#include "level/ItemStorage.hxx"
 
 namespace level {
 	class Assembler : public Machine {
@@ -25,7 +27,7 @@ namespace level {
 		void produce();
 		bool verify_recipe() const;
 
-		std::set<stx::optref<const Item>> input_items;
+		ItemStorage input_items;
 		stx::optref<const Item> temp_item;
 		stx::optref<const Item> output_item;
 
