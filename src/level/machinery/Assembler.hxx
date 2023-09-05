@@ -1,4 +1,5 @@
 #pragma once
+#include <set>
 #include "Machine.hxx"
 #include "level/Recipe.hxx"
 
@@ -22,8 +23,9 @@ namespace level {
 	private:
 		void fetch();
 		void produce();
+		bool verify_recipe() const;
 
-		stx::optref<const Item> input_item;
+		std::set<stx::optref<const Item>> input_items;
 		stx::optref<const Item> temp_item;
 		stx::optref<const Item> output_item;
 
@@ -33,7 +35,6 @@ namespace level {
 		std::vector<stx::reference<Machine>> input_ports;
 		std::size_t input_index = 0;
 
-		stx::reference<const Item> from;
-		stx::reference<const Item> to;
+		stx::reference<const Recipe> recipe;
 	};
 }

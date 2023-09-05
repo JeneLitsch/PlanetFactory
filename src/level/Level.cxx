@@ -9,7 +9,10 @@
 
 namespace level {
 	const Recipe yellow_to_red {
-		.from = item_yellow,
+		.from = {
+			item_yellow,
+			item_blue,
+		},
 		.to = item_red,
 	};
 

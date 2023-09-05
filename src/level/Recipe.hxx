@@ -4,7 +4,7 @@
 
 namespace level {
 	struct Recipe {
-		stx::reference<const Item> from;
+		std::vector<stx::reference<const Item>> from;
 		stx::reference<const Item> to;
 	};
 }

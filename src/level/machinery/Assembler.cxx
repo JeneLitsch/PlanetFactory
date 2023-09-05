@@ -4,8 +4,7 @@ namespace level {
 	Assembler::Assembler(
 		stx::position2i position, stx::reference<const Recipe> recipe) 
 		: Machine{position}
-		, from{recipe->from}
-		, to{recipe->to} {}
+		, recipe{recipe} {}
 
 
 
@@ -33,22 +32,39 @@ namespace level {
 		if(!std::empty(this->input_ports) && !this->output_item) {
 			auto & input = *this->input_ports[this->input_index];
 			if(auto item = input.peek_output()) {
-				if(stx::reference{*item} == this->from) {
+				if(!this->input_items.contains(item)) {
 					input.clear_output();
-					this->input_item = item;
-					this->fetching_done = true;
+					this->input_items.insert(item);
 				}
 			}
 		}
+		this->fetching_done = true;
+	}
+
+
+
+	bool Assembler::verify_recipe() const {
+		for(const auto & needed : this->recipe->from) {
+			const auto begin = std::begin(this->input_items);
+			const auto end = std::end(this->input_items);
+			if(!std::any_of(begin, end, [&] (auto & i) { return *i == needed; })) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 
 
 	void Assembler::produce() {
-		if(this->input_item && !this->temp_item) {
-			this->temp_item = *this->to;
-			this->input_item = stx::nullref;
-			this->production_done = true;
+		if(!this->temp_item) {
+			if(this->verify_recipe()) {
+				this->temp_item = *this->recipe->to;
+				for(const auto & needed : this->recipe->from) {
+					this->input_items.erase(*needed);
+				}
+				this->production_done = true;
+			}
 		}
 	}
 
