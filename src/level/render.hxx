@@ -1,6 +1,6 @@
 #pragma once
 #include "stdxx/grid.hxx"
-#include <SFML/Graphics.hpp>
+#include "SFML/Graphics.hpp"
 #include "level/Tile.hxx"
 #include "level/Item.hxx"
 

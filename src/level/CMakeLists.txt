@@ -4,8 +4,7 @@ add_library(level
 	Level.cxx
 	render.cxx
 	Item.cxx
-	machines/render.cxx
-	machines/transfer.cxx
-	machines/create.cxx
-	machines/produce.cxx
+	Conveyor.cxx
+	Machine.cxx
+	Source.cxx
 )

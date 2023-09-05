@@ -1,7 +1,7 @@
 #pragma once
 #include <variant>
 #include <optional>
-#include <SFML/Graphics.hpp>
+#include "SFML/Graphics.hpp"
 
 namespace core {
 	struct Closed {};

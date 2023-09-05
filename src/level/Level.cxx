@@ -3,60 +3,65 @@
 #include <random>
 #include "render.hxx"
 #include "stdxx/io.hxx"
+#include "Conveyor.hxx"
+#include "Source.hxx"
 
 namespace level {
 	Level::Level(stx::size2u size, std::uint64_t seed) 
-	: tiles{size, Tile{rock}}, machines{1}, tick {0.5} {
+	: tiles{size, Tile{rock}}, tick {0.5} {
 		std::mt19937_64 rng{seed};
 
-		auto & miner = new_miner(this->machines, {4,5}, item_blue);
-		auto & miner2 = new_miner(this->machines, {7,4}, item_blue);
-		auto & assembler = new_assembler(this->machines, {14,5}, item_blue, item_yellow); 
-		auto & sink = new_sink(this->machines, {14,14}); 
-		auto & sink2 = new_sink(this->machines, {17,9}); 
+		this->machines.push_back(std::make_unique<Source>(stx::position2i{0,0}, item_blue));
+		Machine & s1 = *this->machines.back();
 
-		auto belt_a = new_conveyor_belt(this->machines, {
-			{5,5},{6,5}, {7,5}, {8,5}, {9,5}, {10,5}, {11,5}, {12,5}, {13,5},
-		});
+		this->machines.push_back(std::make_unique<Source>(stx::position2i{1,2}, item_yellow));
+		Machine & s2 = *this->machines.back();
 
-		auto belt_b = new_conveyor_belt(this->machines, {
-			{14,6},
-			{14,7},
-			{14,8},
-			{14,9},
-			{14,10},
-			{14,11},
-			{14,12},
-			{14,13},
-		});
+		this->machines.push_back(std::make_unique<Conveyor>(stx::position2i{0,1}));
+		Machine & c1 = *this->machines.back();
 
-		auto belt_c = new_conveyor_belt(this->machines, {
-			{15,9},
-			{16,9},
-		});
+		this->machines.push_back(std::make_unique<Conveyor>(stx::position2i{0,2}));
+		Machine & c2 = *this->machines.back();
 
+		this->machines.push_back(std::make_unique<Conveyor>(stx::position2i{0,3}));
+		Machine & c3 = *this->machines.back();
 
-		connect(miner, belt_a.front());
-		connect(miner2, belt_a[2]);
-		connect(belt_a.back(), assembler);
-		connect(assembler, belt_b.front());
-		connect(belt_b.back(), sink);
-		connect(belt_b[3], belt_c.front());
-		connect(belt_c.back(), sink2);
+		c3.link(c2);
+		c2.link(c1);
+		c2.link(s2);
+		c1.link(s1);
+
+		stx::reference<Machine> prev = c3;
+
+		for(int i = 0; i < 10; i++) {
+			this->machines.push_back(std::make_unique<Conveyor>(stx::position2i{1 + i,3}));
+			stx::reference<Machine> m = *this->machines.back();
+			m->link(prev);
+			prev = m;
+		}
 	}
 
 
 
 	void Level::update(double dt) {
-		if(tick(dt)) {
-			machines.run_system(produce_sink);
-			machines.run_system(produce_recipe);
-			auto order = determine_transfer_order(this->machines);
-			std::cout << stx::whole(order) << "\n";
-			machines.run_system_for(order, [&] (Machine & machine) {
-				return item_transfer(machine, this->machines);
-			});
-			machines.run_system(produce_source);
+		if(this->tick(dt)) {
+			for(auto & m : machines) {
+				m->tick_pre();
+			}
+
+            std::size_t tries = std::size(this->machines);
+            while (std::any_of(std::begin(this->machines), std::end(this->machines), [] (auto & m) {
+				return !m->is_done();
+			}) && tries > 0) {
+                --tries;
+				for(auto & m : machines) {
+					m->tick_main();
+				}
+            }
+
+			for(auto & m : machines) {
+				m->tick_post();
+			}
 		}
 	}
 
@@ -64,9 +69,9 @@ namespace level {
 
 	void Level::render(sf::RenderTarget & render_target) {
 		render_tiles(this->tiles, render_target);
-		this->machines.run_system([&] (Machine & m) {
-			return render_machine(m, render_target);
-		});
+		for(const auto & machine : this->machines) {
+			machine->render(render_target);
+		}
 	}
 	
 	

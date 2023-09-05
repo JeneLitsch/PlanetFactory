@@ -1,6 +1,6 @@
 #pragma once
 #include "stdxx/chrono.hxx"
-#include <SFML/Graphics.hpp>
+#include "SFML/Graphics.hpp"
 #include "core/Event.hxx"
 #include "core/StateManager.hxx"
 
