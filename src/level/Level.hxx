@@ -5,7 +5,7 @@
 #include "core/GameState.hxx"
 #include "level/Tile.hxx"
 #include "level/Item.hxx"
-#include "Machine.hxx"
+#include "level/machinery/Machine.hxx"
 
 namespace level {
 	class Level : public core::GameState {

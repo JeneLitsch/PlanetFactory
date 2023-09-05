@@ -4,8 +4,6 @@ add_library(level
 	Level.cxx
 	render.cxx
 	Item.cxx
-	Conveyor.cxx
-	Machine.cxx
-	Assembler.cxx
-	Source.cxx
 )
+
+add_subdirectory(machinery)

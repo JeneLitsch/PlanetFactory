@@ -3,11 +3,16 @@
 #include <random>
 #include "render.hxx"
 #include "stdxx/io.hxx"
-#include "Conveyor.hxx"
-#include "Source.hxx"
-#include "Assembler.hxx"
+#include "level/machinery/Conveyor.hxx"
+#include "level/machinery/Source.hxx"
+#include "level/machinery/Assembler.hxx"
 
 namespace level {
+	const Recipe yellow_to_red {
+		.from = item_yellow,
+		.to = item_red,
+	};
+
 	Level::Level(stx::size2u size, std::uint64_t seed) 
 	: tiles{size, Tile{rock}}, tick {0.5} {
 		std::mt19937_64 rng{seed};
@@ -42,7 +47,7 @@ namespace level {
 		}
 
 
-		this->machines.push_back(std::make_unique<Assembler>(stx::position2i{11, 3}, item_yellow, item_red));
+		this->machines.push_back(std::make_unique<Assembler>(stx::position2i{11, 3}, yellow_to_red));
 		this->machines.back()->link(prev);
 		prev = *this->machines.back();
 

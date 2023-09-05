@@ -1,11 +1,11 @@
 #pragma once
-#include "stdxx/reference.hxx"
 #include "Machine.hxx"
+#include "level/Recipe.hxx"
 
 namespace level {
 	class Assembler : public Machine {
 	public:
-		Assembler(stx::position2i position, stx::reference<const Item> from, stx::reference<const Item> to);
+		Assembler(stx::position2i position, stx::reference<const Recipe> recipe);
 
 		virtual void tick_pre() override;
 		virtual void tick_main() override;

@@ -2,7 +2,7 @@
 #include "SFML/Graphics.hpp"
 #include "stdxx/math.hxx"
 #include "stdxx/reference.hxx"
-#include "Item.hxx"
+#include "level/Item.hxx"
 
 namespace level {
 	class Machine {
@@ -25,6 +25,7 @@ namespace level {
 
 		virtual bool is_done() const = 0;
 
+		virtual ~Machine() = default;
 	private:
 		stx::position2i position;
 	};

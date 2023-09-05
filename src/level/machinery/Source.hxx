@@ -1,5 +1,6 @@
 #pragma once
 #include "Machine.hxx"
+
 namespace level {
 	class Source : public Machine {
 	public:

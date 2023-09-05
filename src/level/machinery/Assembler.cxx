@@ -2,12 +2,10 @@
 
 namespace level {
 	Assembler::Assembler(
-		stx::position2i position,
-		stx::reference<const Item> from,
-		stx::reference<const Item> to) 
+		stx::position2i position, stx::reference<const Recipe> recipe) 
 		: Machine{position}
-		, from{from}
-		, to{to} {}
+		, from{recipe->from}
+		, to{recipe->to} {}
 
 
 
