@@ -3,7 +3,7 @@
 namespace level {
 	Source::Source(stx::position2i position, stx::reference<const Item> produced_item) 
 		: Machine{position}
-		, produced_item{produced_item} {}
+		, produced_item{*produced_item} {}
 
 
 
@@ -47,8 +47,15 @@ namespace level {
 
 
 
-	stx::optref<const Item> Source::take_output() {
-		return std::exchange(this->output_item, stx::nullref);
+
+	stx::optref<const Item> Source::peek_output() const {
+		return this->output_item;
+	}
+
+
+
+	void Source::clear_output() {
+		this->output_item = stx::nullref;
 	}
 
 

@@ -6,5 +6,6 @@ add_library(level
 	Item.cxx
 	Conveyor.cxx
 	Machine.cxx
+	Assembler.cxx
 	Source.cxx
 )

@@ -19,6 +19,6 @@ namespace level {
 	private:
 		stx::grid2<Tile> tiles;
 		std::vector<std::unique_ptr<Machine>> machines;
-		stx::chrono::wait tick;
+		stx::chrono::every tick;
 	};
 }

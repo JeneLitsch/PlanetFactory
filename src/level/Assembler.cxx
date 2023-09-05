@@ -1,12 +1,17 @@
-#include "Conveyor.hxx"
+#include "Assembler.hxx"
 
 namespace level {
-	Conveyor::Conveyor(stx::position2i position) 
-		: Machine{position} {}
+	Assembler::Assembler(
+		stx::position2i position,
+		stx::reference<const Item> from,
+		stx::reference<const Item> to) 
+		: Machine{position}
+		, from{from}
+		, to{to} {}
 
 
 
-	void Conveyor::tick_pre() {
+	void Assembler::tick_pre() {
 		this->fetching_done = false;
 		this->production_done = false;
 		this->input_index = (this->input_index + 1) % std::size(this->input_ports); 
@@ -14,7 +19,7 @@ namespace level {
 
 
 
-	void Conveyor::tick_main() {
+	void Assembler::tick_main() {
 		if(!this->fetching_done) {
 			this->fetch();
 		} 
@@ -26,20 +31,24 @@ namespace level {
 
 
 
-	void Conveyor::fetch() {
+	void Assembler::fetch() {
 		if(!std::empty(this->input_ports) && !this->output_item) {
-			if(auto item = this->input_ports[this->input_index]->take_output()) {
-				this->input_item = item;
-				this->fetching_done = true;
+			auto & input = *this->input_ports[this->input_index];
+			if(auto item = input.peek_output()) {
+				if(stx::reference{*item} == this->from) {
+					input.clear_output();
+					this->input_item = item;
+					this->fetching_done = true;
+				}
 			}
 		}
 	}
 
 
 
-	void Conveyor::produce() {
+	void Assembler::produce() {
 		if(this->input_item && !this->temp_item) {
-			this->temp_item = this->input_item;
+			this->temp_item = *this->to;
 			this->input_item = stx::nullref;
 			this->production_done = true;
 		}
@@ -47,7 +56,7 @@ namespace level {
 
 
 
-	void Conveyor::tick_post() {
+	void Assembler::tick_post() {
 		if(this->temp_item && !this->output_item) {
 			this->output_item = this->temp_item;
 		}
@@ -56,10 +65,10 @@ namespace level {
 
 	
 
-	void Conveyor::render(sf::RenderTarget & target) const {
+	void Assembler::render(sf::RenderTarget & target) const {
 		sf::RectangleShape main_rect;
 		main_rect.setSize({1,1});
-		main_rect.setFillColor(sf::Color{64,64,64}),
+		main_rect.setFillColor(sf::Color{200,200,200}),
 		main_rect.setPosition(this->get_position().x, this->get_position().y);
 		target.draw(main_rect);
 
@@ -74,25 +83,26 @@ namespace level {
 
 
 
-	void Conveyor::link(stx::reference<Machine> input_machine)  {
+	void Assembler::link(stx::reference<Machine> input_machine)  {
 		this->input_ports.push_back(input_machine);
 	}
 
 
 
-	stx::optref<const Item> Conveyor::peek_output() const {
+	stx::optref<const Item> Assembler::peek_output() const {
 		return this->output_item;
 	}
 
 
 
-	void Conveyor::clear_output() {
+	void Assembler::clear_output() {
 		this->output_item = stx::nullref;
 	}
 
 
 
-	bool Conveyor::is_done() const {
+
+	bool Assembler::is_done() const {
 		return this->fetching_done && this->production_done;
 	}
 }

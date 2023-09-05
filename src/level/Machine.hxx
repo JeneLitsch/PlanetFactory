@@ -17,7 +17,9 @@ namespace level {
 
 		virtual void link(stx::reference<Machine> input_machine) = 0;
 
-		virtual stx::optref<const Item> take_output() = 0;
+		virtual stx::optref<const Item> peek_output() const = 0;
+		virtual void clear_output() = 0;
+		stx::optref<const Item> take_output();
 
 		stx::position2i get_position() const;
 

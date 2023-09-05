@@ -5,6 +5,7 @@
 #include "stdxx/io.hxx"
 #include "Conveyor.hxx"
 #include "Source.hxx"
+#include "Assembler.hxx"
 
 namespace level {
 	Level::Level(stx::size2u size, std::uint64_t seed) 
@@ -34,7 +35,20 @@ namespace level {
 		stx::reference<Machine> prev = c3;
 
 		for(int i = 0; i < 10; i++) {
-			this->machines.push_back(std::make_unique<Conveyor>(stx::position2i{1 + i,3}));
+			this->machines.push_back(std::make_unique<Conveyor>(stx::position2i{1 + i, 3}));
+			stx::reference<Machine> m = *this->machines.back();
+			m->link(prev);
+			prev = m;
+		}
+
+
+		this->machines.push_back(std::make_unique<Assembler>(stx::position2i{11, 3}, item_yellow, item_red));
+		this->machines.back()->link(prev);
+		prev = *this->machines.back();
+
+
+		for(int i = 0; i < 10; i++) {
+			this->machines.push_back(std::make_unique<Conveyor>(stx::position2i{12 + i, 3}));
 			stx::reference<Machine> m = *this->machines.back();
 			m->link(prev);
 			prev = m;

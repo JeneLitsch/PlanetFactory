@@ -15,7 +15,8 @@ namespace level {
 
 		virtual void link(stx::reference<Machine> input_machine) override;
 
-		virtual stx::optref<const Item> take_output() override;
+		virtual stx::optref<const Item> peek_output() const override;
+		virtual void clear_output() override;
 
 		virtual bool is_done() const override;		
 	private:
