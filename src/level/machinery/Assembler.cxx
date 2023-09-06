@@ -41,7 +41,6 @@ namespace level {
 					input.clear_output();
 				}
 				this->fetching_done = true;
-				// this->input_items.print(); std::cout << "\n";
 			}
 		}
 	}

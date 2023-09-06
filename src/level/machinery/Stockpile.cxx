@@ -69,11 +69,11 @@ namespace level {
 		main_rect.setPosition(this->get_position().x, this->get_position().y);
 		target.draw(main_rect);
 
-		if(!this->storage.is_empty()) {
+		for(std::int32_t i = 0; i < this->storage.get_amount(); i++) {
 			sf::RectangleShape item_rect;
-			item_rect.setSize({0.5,0.5});
+			item_rect.setSize({0.5,0.1});
 			item_rect.setFillColor(this->storage.get_item()->color),
-			item_rect.setPosition(this->get_position().x + 0.25, this->get_position().y + 0.25);
+			item_rect.setPosition(this->get_position().x + 0.25, this->get_position().y + 0.25 + 0.1 * i);
 			target.draw(item_rect);
 		}
 	}
