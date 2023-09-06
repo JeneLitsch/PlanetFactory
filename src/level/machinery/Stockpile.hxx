@@ -1,6 +1,6 @@
 #pragma once
 #include "Machine.hxx"
-#include "level/ItemSlot.hxx"
+#include "level/ItemStack.hxx"
 
 namespace level {
 	class Stockpile : public Machine {
@@ -25,7 +25,7 @@ namespace level {
 
 		stx::optref<const Item> input_item;
 		stx::optref<const Item> temp_item;
-		ItemSlot storage;
+		ItemStack storage;
 
 
 

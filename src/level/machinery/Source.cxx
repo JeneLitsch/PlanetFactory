@@ -20,7 +20,7 @@ namespace level {
 	}
 
 
-	
+
 	void Source::produce() {
 		this->production_done = true;
 	}
@@ -54,7 +54,6 @@ namespace level {
 
 
 	void Source::link(stx::reference<Machine> input_machine)  {}
-
 
 
 

@@ -1,20 +1,20 @@
-#include "ItemSlot.hxx"
+#include "ItemStack.hxx"
 
 namespace level {
-	ItemSlot::ItemSlot()
+	ItemStack::ItemStack()
 		: item {stx::nullref}
 		, capacity{0}
 		, amount{0} {}
 
 
-	ItemSlot::ItemSlot(stx::reference<const Item> item, std::int32_t capacity)
+	ItemStack::ItemStack(stx::reference<const Item> item, std::int32_t capacity)
 		: item {*item}
 		, capacity{capacity}
 		, amount{0} {}
 
 
 
-	std::int32_t ItemSlot::store(std::int32_t amount) {
+	std::int32_t ItemStack::store(std::int32_t amount) {
 		const std::int32_t remaining = this->capacity - this->amount;
 		if(remaining < amount) {
 			this->amount = this->capacity;
@@ -28,7 +28,7 @@ namespace level {
 
 
 
-	std::int32_t ItemSlot::retrieve(std::int32_t amount) {
+	std::int32_t ItemStack::retrieve(std::int32_t amount) {
 		if(this->amount < amount) {
 			this->amount = 0;
 			return amount - this->amount;
@@ -41,31 +41,31 @@ namespace level {
 
 
 
-	std::int32_t ItemSlot::get_amount() const {
+	std::int32_t ItemStack::get_amount() const {
 		return this->amount;
 	}
 
 
 
-	std::int32_t ItemSlot::get_capacity() const {
+	std::int32_t ItemStack::get_capacity() const {
 		return this->capacity;
 	}
 
 
 
-	bool ItemSlot::is_empty() const {
+	bool ItemStack::is_empty() const {
 		return this->amount <= 0;
 	}
 
 
 
-	bool ItemSlot::is_full() const {
+	bool ItemStack::is_full() const {
 		return this->amount >= this->capacity;
 	}
 
 
 
-	stx::optref<const Item> ItemSlot::get_item() const {
+	stx::optref<const Item> ItemStack::get_item() const {
 		return this->item;
 	}
 }

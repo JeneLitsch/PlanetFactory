@@ -1,7 +1,7 @@
 #include "ItemStorage.hxx"
 
 namespace level {
-	void ItemStorage::add_slot(ItemSlot slot) {
+	void ItemStorage::add_slot(ItemStack slot) {
 		this->slots.push_back(slot);
 	}
 

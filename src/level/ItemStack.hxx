@@ -3,10 +3,10 @@
 #include "Item.hxx"
 
 namespace level {
-	class ItemSlot {
+	class ItemStack {
 	public:
-		ItemSlot();
-		ItemSlot(stx::reference<const Item> item, std::int32_t capacity);
+		ItemStack();
+		ItemStack(stx::reference<const Item> item, std::int32_t capacity);
 		[[no_discard]] std::int32_t store(std::int32_t amount);
 		[[no_discard]] std::int32_t retrieve(std::int32_t amount);
 

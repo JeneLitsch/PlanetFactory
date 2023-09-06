@@ -2,7 +2,7 @@
 #include <set>
 #include "Machine.hxx"
 #include "level/Recipe.hxx"
-#include "level/ItemSlot.hxx"
+#include "level/ItemStack.hxx"
 #include "level/ItemStorage.hxx"
 
 namespace level {

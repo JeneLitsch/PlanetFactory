@@ -4,7 +4,7 @@ add_library(level
 	Level.cxx
 	render.cxx
 	Item.cxx
-	ItemSlot.cxx
+	ItemStack.cxx
 	ItemStorage.cxx
 )
 

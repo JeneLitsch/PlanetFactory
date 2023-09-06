@@ -38,7 +38,7 @@ namespace level {
 	void Stockpile::tick_post() {
 		if(this->temp_item) {
 			if(this->storage.is_empty()) {
-				this->storage = ItemSlot{*this->temp_item, 5};
+				this->storage = ItemStack{*this->temp_item, 5};
 			}
 			if(!this->storage.is_full() && this->storage.get_item() == this->temp_item) {
 				this->storage.store(1);

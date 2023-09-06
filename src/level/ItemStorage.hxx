@@ -1,11 +1,11 @@
 #pragma once
 #include <vector>
-#include "ItemSlot.hxx"
+#include "ItemStack.hxx"
 
 namespace level {
 	class ItemStorage {
 	public:
-		void add_slot(ItemSlot slot);
+		void add_slot(ItemStack slot);
 
 		[[no_discard]] std::int32_t store(stx::reference<const Item> item, std::int32_t amount);
 		[[no_discard]] std::int32_t retrieve(stx::reference<const Item> item, std::int32_t amount);
@@ -14,6 +14,6 @@ namespace level {
 
 		void print() const;
 	private:
-		std::vector<ItemSlot> slots;
+		std::vector<ItemStack> slots;
 	};
 }

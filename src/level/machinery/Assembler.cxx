@@ -7,7 +7,7 @@ namespace level {
 		, recipe{recipe} {
 
 		for(const auto & from : recipe->from) {
-			this->input_items.add_slot(ItemSlot{from, 1});
+			this->input_items.add_slot(ItemStack{from, 1});
 		}
 	}
 
