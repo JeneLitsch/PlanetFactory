@@ -14,18 +14,6 @@ namespace level {
 
 
 
-	void Stockpile::tick_main() {
-		if(!this->fetching_done) {
-			this->fetch();
-		} 
-
-		if(!this->production_done) {
-			this->produce();
-		} 
-	}
-
-
-
 	void Stockpile::fetch() {
 		if(!std::empty(this->input_ports) && (!this->storage.is_full() || this->storage.is_empty())) {
 			if(auto item = this->input_ports[this->input_index]->take_output()) {

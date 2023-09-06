@@ -11,6 +11,19 @@ namespace level {
 	}
 
 
+
+	void Machine::tick_main() {
+		if(!this->fetching_done) {
+			this->fetch();
+		} 
+
+		if(!this->production_done) {
+			this->produce();
+		} 
+	}
+
+
+
 	stx::optref<const Item> Machine::take_output() {
 		if(auto item = this->peek_output()) {
 			this->clear_output();

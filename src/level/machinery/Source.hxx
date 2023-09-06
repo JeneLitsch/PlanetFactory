@@ -7,8 +7,10 @@ namespace level {
 		Source(stx::position2i position, stx::reference<const Item> produced_item);
 
 		virtual void tick_pre() override;
-		virtual void tick_main() override;
 		virtual void tick_post() override;
+
+		virtual void fetch() override;
+		virtual void produce() override;
 
 		virtual void render(sf::RenderTarget & target) const override;
 
@@ -21,9 +23,6 @@ namespace level {
 	private:
 		stx::optref<const Item> produced_item;
 		stx::optref<const Item> output_item;
-
-		bool fetching_done = false;
-		bool production_done = false;
 
 		std::uint32_t counter = 0;
 	};

@@ -15,7 +15,14 @@ namespace level {
 
 
 
-	void Source::tick_main() {
+	void Source::fetch() {
+		this->fetching_done = true;
+	}
+
+
+	
+	void Source::produce() {
+		this->production_done = true;
 	}
 
 

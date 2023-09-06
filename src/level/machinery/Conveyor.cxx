@@ -14,18 +14,6 @@ namespace level {
 
 
 
-	void Conveyor::tick_main() {
-		if(!this->fetching_done) {
-			this->fetch();
-		} 
-
-		if(!this->production_done) {
-			this->produce();
-		} 
-	}
-
-
-
 	void Conveyor::fetch() {
 		if(!std::empty(this->input_ports) && !this->output_item) {
 			if(auto item = this->input_ports[this->input_index]->take_output()) {

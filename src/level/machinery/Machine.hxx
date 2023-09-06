@@ -10,8 +10,11 @@ namespace level {
 		Machine(stx::position2i position);
 
 		virtual void tick_pre() = 0;
-		virtual void tick_main() = 0;
+		void tick_main();
 		virtual void tick_post() = 0;
+		
+		virtual void fetch() = 0;
+		virtual void produce() = 0;
 
 		virtual void render(sf::RenderTarget & target) const = 0;
 
@@ -26,7 +29,11 @@ namespace level {
 		virtual bool is_done() const = 0;
 
 		virtual ~Machine() = default;
+	protected:
+		bool fetching_done = false;
+		bool production_done = false;
 	private:
+
 		stx::position2i position;
 	};
 }

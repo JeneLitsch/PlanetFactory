@@ -21,18 +21,6 @@ namespace level {
 
 
 
-	void Assembler::tick_main() {
-		if(!this->fetching_done) {
-			this->fetch();
-		} 
-
-		if(!this->production_done) {
-			this->produce();
-		} 
-	}
-
-
-
 	void Assembler::fetch() {
 		if(!std::empty(this->input_ports) && !this->output_item) {
 			auto & input = *this->input_ports[this->input_index];
