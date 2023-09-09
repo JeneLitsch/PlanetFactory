@@ -1,8 +1,5 @@
 #pragma once
 #include "Machine.hxx"
-#include "comp/input/Spawner.hxx"
-#include "comp/middle/PassThrough.hxx"
-#include "comp/output/SimpleOutput.hxx"
 
 namespace level {
 	class Source : public Machine {
@@ -24,8 +21,9 @@ namespace level {
 
 		virtual bool is_done() const override;		
 	private:
-		Spawner input;
-		PassThrough middle;
-		SimpleOutput output;
+		stx::optref<const Item> produced_item;
+		stx::optref<const Item> output_item;
+
+		std::uint32_t counter = 0;
 	};
 }
