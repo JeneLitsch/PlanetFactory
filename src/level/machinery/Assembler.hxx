@@ -4,6 +4,7 @@
 #include "level/Recipe.hxx"
 #include "level/ItemStack.hxx"
 #include "level/ItemStorage.hxx"
+#include "utils/RecipeBuilder.hxx"
 
 namespace level {
 	class Assembler : public Machine {
@@ -25,15 +26,11 @@ namespace level {
 
 		virtual bool is_done() const override;		
 	private:
-		bool verify_recipe() const;
+		RecipeBuilder builder;
 
-		ItemStorage input_items;
-		stx::optref<const Item> temp_item;
 		stx::optref<const Item> output_item;
 
 		std::vector<stx::reference<Machine>> input_ports;
 		std::size_t input_index = 0;
-
-		stx::reference<const Recipe> recipe;
 	};
 }

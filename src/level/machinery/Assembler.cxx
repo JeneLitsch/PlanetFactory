@@ -4,11 +4,7 @@ namespace level {
 	Assembler::Assembler(
 		stx::position2i position, stx::reference<const Recipe> recipe) 
 		: Machine{position}
-		, recipe{recipe} {
-
-		for(const auto & from : recipe->from) {
-			this->input_items.add_slot(ItemStack{from, 1});
-		}
+		, builder{recipe} {
 	}
 
 
@@ -25,7 +21,7 @@ namespace level {
 		if(!std::empty(this->input_ports) && !this->output_item) {
 			auto & input = *this->input_ports[this->input_index];
 			if(auto item = input.peek_output()) {
-				if(input_items.store(*item, 1) == 0) {
+				if(this->builder.push(*item)) {
 					input.clear_output();
 				}
 				this->fetching_done = true;
@@ -35,37 +31,20 @@ namespace level {
 
 
 
-	bool Assembler::verify_recipe() const {
-		for(const auto & from : this->recipe->from) {
-			if(this->input_items.get_amount(from) == 0) {
-				return false;
-			}
-		}
-		return true;
-	}
-
-
-
 	void Assembler::produce() {
-		if(!this->temp_item) {
-			if(this->verify_recipe()) {
-				this->temp_item = *this->recipe->to;
-				for(const auto & needed : this->recipe->from) {
-					this->input_items.retrieve(*needed, 1);
-				}
-				this->production_done = true;
-			}
+		if(this->builder.process()) {
+			this->production_done = true;
 		}
 	}
 
 
 
 	void Assembler::tick_post() {
-		if(this->temp_item && !this->output_item) {
-			this->output_item = this->temp_item;
+		if(!this->output_item) {
+			if(auto item = this->builder.pull()) {
+				this->output_item = item;
+			}
 		}
-		this->temp_item = stx::nullref;
-
 	}
 
 	
