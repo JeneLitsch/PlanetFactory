@@ -7,5 +7,3 @@ target_sources(level PRIVATE
 	Source.cxx
 	Stockpile.cxx
 )
-
-add_subdirectory(comp)

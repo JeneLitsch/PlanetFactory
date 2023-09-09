@@ -1,8 +1,5 @@
 #pragma once
 #include "Machine.hxx"
-#include "comp/input/SimpleInput.hxx"
-#include "comp/middle/PassThrough.hxx"
-#include "comp/output/SimpleOutput.hxx"
 
 namespace level {
 	class Conveyor : public Machine {
@@ -24,8 +21,12 @@ namespace level {
 
 		virtual bool is_done() const override;		
 	private:
-		SimpleInput input;
-		PassThrough middle;
-		SimpleOutput output;
+
+		stx::optref<const Item> input_item;
+		stx::optref<const Item> temp_item;
+		stx::optref<const Item> output_item;
+
+		std::vector<stx::reference<Machine>> input_ports;
+		std::size_t input_index = 0;
 	};
 }
