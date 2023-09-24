@@ -24,4 +24,39 @@ namespace level {
 		}
 		target.draw(vertex_array);
 	}
+
+
+
+	void render_machine(const Machine & machine, sf::RenderTarget & target) {
+		auto * transform = machine.get_if<Transform>();
+		auto * output = machine.get_if<Output>();
+		auto * sprite = machine.get_if<Sprite>();
+		auto * storage = machine.get_if<Storage>();
+
+		if(transform && sprite) {
+			sf::RectangleShape main_rect;
+			main_rect.setSize({1,1});
+			main_rect.setFillColor(sprite->color),
+			main_rect.setPosition(transform->position.x, transform->position.y);
+			target.draw(main_rect);
+		}
+
+		if(transform && output && output->item) {
+			sf::RectangleShape item_rect;
+			item_rect.setSize({0.5,0.5});
+			item_rect.setFillColor(output->item->color),
+			item_rect.setPosition(transform->position.x + 0.25, transform->position.y + 0.25);
+			target.draw(item_rect);
+		}
+
+		if(transform && storage) {
+			for(std::int32_t i = 0; i < storage->stack.get_amount(); i++) {
+				sf::RectangleShape item_rect;
+				item_rect.setSize({0.5,0.1});
+				item_rect.setFillColor(storage->stack.get_item()->color),
+				item_rect.setPosition(transform->position.x + 0.25, transform->position.y + 0.25 + 0.1 * i);
+				target.draw(item_rect);
+			}
+		}
+	}
 }

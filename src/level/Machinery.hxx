@@ -58,14 +58,7 @@ namespace level {
 		Output, Storage
 	>;
 
-	void tick_pre(Machinery::Entity & machine);
-	bool tick_main(Machinery::Entity & machine);
-	void tick_post(Machinery::Entity & machine);
+	using Machine = Machinery::Entity;
 
-	void render(Machinery::Entity & machine, sf::RenderTarget & target);
 
-	Machinery::Entity & create_conveyor(Machinery & machinery, stx::position2i position, const std::vector<std::uint64_t> & prev);
-	Machinery::Entity & create_source(Machinery & machinery, stx::position2i position, stx::reference<const Item> item, std::uint32_t delay);
-	Machinery::Entity & create_assembler(Machinery & machinery, stx::position2i position, const std::vector<std::uint64_t> & prev, stx::reference<const Recipe> recipe);
-	Machinery::Entity & create_container(Machinery & machinery, stx::position2i position, const std::vector<std::uint64_t> & prev);
 }

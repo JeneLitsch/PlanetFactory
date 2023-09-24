@@ -1,8 +1,10 @@
-#include "Level.hxx"
 #include <iostream>
 #include <random>
-#include "render.hxx"
 #include "stdxx/io.hxx"
+#include "Level.hxx"
+#include "render.hxx"
+#include "create.hxx"
+#include "tick.hxx"
 
 namespace level {
 	Level::Level(stx::size2u size, std::uint64_t seed) 
@@ -106,7 +108,7 @@ namespace level {
 
 	void Level::render(sf::RenderTarget & render_target) {
 		render_tiles(this->tiles, render_target);
-		machinery.run_system(level::render, render_target);
+		machinery.run_system(render_machine, render_target);
 	}
 	
 	
