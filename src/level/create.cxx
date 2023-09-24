@@ -1,115 +1,84 @@
 #include "create.hxx"
+#include "input/SimpleInput.hxx"
 
+#include "middle/Pass.hxx"
+#include "middle/Spawn.hxx"
+#include "middle/Builder.hxx"
+
+#include "output/SimpleOutput.hxx"
+#include "output/StorageOutput.hxx"
 
 
 namespace level {
-	Machine & create_machine(Machinery & machinery, stx::position2i position, sf::Color color) {
-		Machine & machine = machinery.new_entity();
-
-		machine.add(Transform{
-			.position = position,
-		});
-
-		machine.add(Sprite{
-			.color = color,
-		});
-
-		machine.add(Status{
-			.fetching_done = false,
-			.production_done = false,
-		});
-	
-		return machine;
-	}
-
-
-
-	Machine & create_conveyor(Machinery & machinery, stx::position2i position, const std::vector<std::uint64_t> & prev) {
-		Machine & machine = create_machine(machinery, position, sf::Color{64,64,64});
-
-		machine.add(Input{
-			.input_ports = prev,
-			.input_index = 0,
-			.item = stx::nullref,
-			.machinery = &machinery,
-		});
-
-		machine.add(Pass {
-			.item = stx::nullref,
-		});
-
-		machine.add(Output {
-			.item = stx::nullref,
-		});
-
-		return machine;
-	}
-
-
-
-	Machine & create_source(Machinery & machinery, stx::position2i position, stx::reference<const Item> item, std::uint32_t delay) {
-		Machine & machine = create_machine(machinery, position, sf::Color::White);
-		
-		machine.add(Spawn{
-			.item = item,
-			.counter = 0,
-			.delay = delay,
-		});
-
-		machine.add(Output {
-			.item = stx::nullref,
-		});
-
-		return machine;
-	}
-
-
-
-	Machine & create_assembler(Machinery & machinery, stx::position2i position, const std::vector<std::uint64_t> & prev, stx::reference<const Recipe> recipe) {
-		Machine & machine = create_machine(machinery, position, sf::Color{128,128,128});
-
-		machine.add(Input{
-			.input_ports = prev,
-			.input_index = 0,
-			.item = stx::nullref,
-			.machinery = &machinery,
-		});
-
-		auto & build = machine.add(Build {
-			.recipe = recipe
-		});
-
-		for(const auto & material : recipe->from) {
-			build.materials.add_slot(ItemStack{material, 1});
+	void link(Machine & machine, const std::vector<stx::reference<Machine>> & prev) {
+		for(const auto & e : prev) {
+			machine.input->link(*e->output);
 		}
+	}
 
-		machine.add(Output {
-			.item = stx::nullref,
-		});
+	std::unique_ptr<Machine> create_conveyor(stx::position2i position, const std::vector<stx::reference<Machine>> & prev) {
+		auto machine = std::make_unique<Machine>();
+
+		machine->position = position;
+
+		machine->color = sf::Color{64,64,64};
+
+		machine->input = std::make_unique<SimpleInput>();
+		machine->middle = std::make_unique<Pass>();
+		machine->output = std::make_unique<SimpleOutput>();
+
+		link(*machine, prev);
 
 		return machine;
 	}
 
 
 
-	Machine & create_container(Machinery & machinery, stx::position2i position, const std::vector<std::uint64_t> & prev) {
-		Machine & machine = create_machine(machinery, position, sf::Color{196,196,196});
+	std::unique_ptr<Machine> create_source(stx::position2i position, stx::reference<const Item> item, std::uint32_t delay) {
+		auto machine = std::make_unique<Machine>();
 
-		machine.add(Input{
-			.input_ports = prev,
-			.input_index = 0,
-			.item = stx::nullref,
-			.machinery = &machinery,
-		});
+		machine->position = position;
 
-		machine.add(Pass {
-			.item = stx::nullref,
-		});
+		machine->color = sf::Color::White;
 
-		machine.add(Storage {
-			.stack = {}
-		});
-	
+		machine->input = std::make_unique<SimpleInput>();
+		machine->middle = std::make_unique<Spawn>(item);
+		machine->output = std::make_unique<SimpleOutput>();
+
+		return machine;
+	}
+
+
+
+	std::unique_ptr<Machine> create_assembler(stx::position2i position, const std::vector<stx::reference<Machine>> & prev, stx::reference<const Recipe> recipe) {
+		auto machine = std::make_unique<Machine>();
+
+		machine->position = position;
+
+		machine->color = sf::Color::White;
+
+		machine->input = std::make_unique<SimpleInput>();
+		machine->middle = std::make_unique<Builder>(recipe);
+		machine->output = std::make_unique<SimpleOutput>();
+
+		link(*machine, prev);
+		return machine;
+	}
+
+
+
+	std::unique_ptr<Machine> create_container(stx::position2i position, const std::vector<stx::reference<Machine>> & prev) {
+		auto machine = std::make_unique<Machine>();
+
+		machine->position = position;
+
+		machine->color = sf::Color{64,64,64};
+
+		machine->input = std::make_unique<SimpleInput>();
+		machine->middle = std::make_unique<Pass>();
+		machine->output = std::make_unique<StorageOutput>();
+
+		link(*machine, prev);
 		return machine;
 	}
 }

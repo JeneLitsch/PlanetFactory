@@ -1,9 +1,10 @@
 #pragma once
-#include "Machinery.hxx"
+#include "Machine.hxx"
+#include "Recipe.hxx"
 
 namespace level {
-	Machine & create_conveyor(Machinery & machinery, stx::position2i position, const std::vector<std::uint64_t> & prev);
-	Machine & create_source(Machinery & machinery, stx::position2i position, stx::reference<const Item> item, std::uint32_t delay);
-	Machine & create_assembler(Machinery & machinery, stx::position2i position, const std::vector<std::uint64_t> & prev, stx::reference<const Recipe> recipe);
-	Machine & create_container(Machinery & machinery, stx::position2i position, const std::vector<std::uint64_t> & prev);
+	std::unique_ptr<Machine> create_conveyor(stx::position2i position, const std::vector<stx::reference<Machine>> & prev);
+	std::unique_ptr<Machine> create_source(stx::position2i position, stx::reference<const Item> item, std::uint32_t delay);
+	std::unique_ptr<Machine> create_assembler(stx::position2i position, const std::vector<stx::reference<Machine>> & prev, stx::reference<const Recipe> recipe);
+	std::unique_ptr<Machine> create_container(stx::position2i position, const std::vector<stx::reference<Machine>> & prev);
 }

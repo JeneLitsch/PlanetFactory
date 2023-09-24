@@ -5,7 +5,7 @@
 #include "core/GameState.hxx"
 #include "level/Tile.hxx"
 #include "level/Item.hxx"
-#include "Machinery.hxx"
+#include "Machine.hxx"
 
 namespace level {
 	class Level : public core::GameState {
@@ -17,8 +17,8 @@ namespace level {
 		virtual void init() override;
 
 	private:
+		std::vector<std::unique_ptr<Machine>> machines;
 		stx::grid2<Tile> tiles;
-		Machinery machinery;
 		stx::chrono::every tick;
 	};
 }
