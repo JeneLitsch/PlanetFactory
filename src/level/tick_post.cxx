@@ -2,56 +2,57 @@
 
 namespace level {
 	namespace {
-		void tick_post(Pass & pass, Output & output) {
-			if(pass.item && !output.item) {
-				output.item = pass.item;
+		stx::optref<const Item> get_tmp_item(Machine & machine) {
+			if(auto * pass = machine.get_if<Pass>()) {
+				return std::exchange(pass->item, stx::nullref);
 			}
-			pass.item = stx::nullref;
+
+			if(auto * build = machine.get_if<Build>()) {
+				return std::exchange(build->product, stx::nullref);
+			}
+
+			if(auto * spawn = machine.get_if<Spawn>()) {
+				return (spawn->counter % spawn->delay == 0) ? stx::optref{*spawn->item} : stx::nullref;
+			}
 		}
 
 
-		
-		void tick_post(Spawn & spawn, Output & output) {
-			if(spawn.counter % spawn.delay == 0) {
-				output.item = *spawn.item;
+
+		bool is_output_clear(Machine & machine) {
+			if(auto * output = machine.get_if<Output>()) {
+				return !output->item;
+			}
+
+			if(auto * storage = machine.get_if<Storage>()) {
+				return !storage->stack.is_full() || storage->stack.is_empty();
 			}
 		}
 
 
 
-		void tick_post(Pass & pass, Storage & storage) {
-			if(pass.item) {
-				if(storage.stack.is_empty()) {
-					storage.stack = ItemStack{*pass.item, 5};
+		void store_output_item(Machine & machine, stx::reference<const Item> item) {
+			if(auto * output = machine.get_if<Output>()) {
+				output->item = *item;
+			}
+
+			if(auto * storage = machine.get_if<Storage>()) {
+				if(storage->stack.is_empty()) {
+					storage->stack = ItemStack{item, 5};
 				}
-				if(!storage.stack.is_full() && storage.stack.get_item() == pass.item) {
-					storage.stack.store(1);
-				}
-			}
-			pass.item = stx::nullref;
-		}
-
-
-
-		void tick_post(Build & build, Output & output) {
-			if(!output.item) {
-				if(auto item = std::exchange(build.product, stx::nullref)) {
-					output.item = item;
+				if(!storage->stack.is_full() && storage->stack.get_item() == *item) {
+					storage->stack.store(1);
 				}
 			}
 		}
 	}
 
-	void tick_post(Machinery::Entity & machine) {
-		auto * pass = machine.get_if<Pass>();
-		auto * output = machine.get_if<Output>();
-		auto * spawn = machine.get_if<Spawn>();
-		auto * build = machine.get_if<Build>();
-		auto * storage = machine.get_if<Storage>();
+	
 
-		if(pass && output) tick_post(*pass, *output);
-		if(spawn && output) tick_post(*spawn, *output);
-		if(pass && storage) tick_post(*pass, *storage);
-		if(build && output) tick_post(*build, *output);
+	void tick_post(Machine & machine) {
+		if(is_output_clear(machine)) {
+			if(const auto item = get_tmp_item(machine)) {
+				store_output_item(machine, *item);
+			}
+		}
 	}
 }
