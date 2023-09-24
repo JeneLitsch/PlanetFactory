@@ -5,7 +5,6 @@ add_library(level
 	render.cxx
 	Item.cxx
 	ItemStack.cxx
+	Machinery.cxx
 	ItemStorage.cxx
 )
-
-add_subdirectory(machinery)

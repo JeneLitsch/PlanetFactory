@@ -11,7 +11,6 @@ namespace level {
 	inline const Recipe yellow_to_red {
 		.from = {
 			item_yellow,
-			item_blue,
 		},
 		.to = item_red,
 	};
