@@ -60,5 +60,5 @@ namespace level {
 
 	using Machine = Machinery::Entity;
 
-
+	bool is_output_clear(Machine & machine);
 }

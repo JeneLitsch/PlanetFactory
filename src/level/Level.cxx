@@ -65,8 +65,9 @@ namespace level {
 		// }
 
 		auto & s1 = create_source(machinery, {0,0}, item_yellow, 4);
+		auto & s2 = create_source(machinery, {1,1}, item_yellow, 4);
 
-		auto & c1 = create_conveyor(machinery, {0,1}, {s1.get_id()});
+		auto & c1 = create_conveyor(machinery, {0,1}, {s1.get_id(), s2.get_id()});
 		auto & c2 = create_conveyor(machinery, {0,2}, {c1.get_id()});
 		auto & c3 = create_conveyor(machinery, {0,3}, {c2.get_id()});
 		auto & c4 = create_conveyor(machinery, {0,4}, {c3.get_id()});

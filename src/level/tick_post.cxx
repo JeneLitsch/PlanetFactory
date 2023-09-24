@@ -18,18 +18,6 @@ namespace level {
 
 
 
-		bool is_output_clear(Machine & machine) {
-			if(auto * output = machine.get_if<Output>()) {
-				return !output->item;
-			}
-
-			if(auto * storage = machine.get_if<Storage>()) {
-				return !storage->stack.is_full() || storage->stack.is_empty();
-			}
-		}
-
-
-
 		void store_output_item(Machine & machine, stx::reference<const Item> item) {
 			if(auto * output = machine.get_if<Output>()) {
 				output->item = *item;
@@ -46,7 +34,7 @@ namespace level {
 		}
 	}
 
-	
+
 
 	void tick_post(Machine & machine) {
 		if(is_output_clear(machine)) {

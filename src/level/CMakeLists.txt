@@ -6,6 +6,7 @@ add_library(level
 	Item.cxx
 	ItemStack.cxx
 	create.cxx
+	Machinery.cxx
 	tick_pre.cxx
 	tick_post.cxx
 	tick.cxx
