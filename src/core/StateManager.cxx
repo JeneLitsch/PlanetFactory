@@ -35,7 +35,13 @@ namespace core {
 	void StateManager::update(double dt) {
 		if(!this->states.empty()) this->states.back()->update(dt);
 	}
-	
+
+
+
+	void StateManager::ui() {
+		if(!this->states.empty()) this->states.back()->ui();
+	}	
+
 	
 	
 	void StateManager::render(sf::RenderTarget & render_target) {

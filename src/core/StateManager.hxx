@@ -18,6 +18,7 @@ namespace core {
 		void handle_queue();
 		void events(const Event & event);
 		void update(double dt);
+		void ui();
 		void render(sf::RenderTarget & render_target);
 	private:
 		void execute(Push push);

@@ -7,6 +7,7 @@ include_directories(./src)
 include_directories(./libs/stdxx)
 include_directories(./libs/nanocomp)
 include_directories(./libs/sfml/include)
+include_directories(./libs/imgui)
 
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)

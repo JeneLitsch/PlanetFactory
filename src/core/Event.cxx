@@ -1,4 +1,5 @@
 #include "Event.hxx"
+#include "imgui-SFML.h"
 
 namespace core {
 	namespace {
@@ -49,6 +50,7 @@ namespace core {
 	std::optional<Event> fetch_event(sf::RenderWindow & window) {
 		sf::Event event;
 		while(window.pollEvent(event)) {
+            ImGui::SFML::ProcessEvent(event);
 			switch (event.type) {
 			case sf::Event::Closed: return event_closed(event);
 			case sf::Event::Resized: return event_window_resized(event, window);

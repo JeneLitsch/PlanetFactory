@@ -12,6 +12,7 @@ namespace level {
 	public:
 		Level(stx::size2u size, std::uint64_t seed);
 		virtual void update(double dt) override;
+		virtual void ui() override;
 		virtual void render(sf::RenderTarget & render_target) override;
 	protected:
 		virtual void init() override;

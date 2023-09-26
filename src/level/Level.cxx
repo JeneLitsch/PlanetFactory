@@ -6,6 +6,9 @@
 #include "create.hxx"
 #include "Recipe.hxx"
 #include "core/calc_viewport.hxx"
+#include "imgui.h"
+
+namespace ui = ImGui;
 
 namespace level {
 	Level::Level(stx::size2u size, std::uint64_t seed) 
@@ -45,6 +48,8 @@ namespace level {
 		this->machines.push_back(std::move(c7));
 		this->machines.push_back(std::move(c8));
 	}
+
+
 
 
 
@@ -104,6 +109,13 @@ namespace level {
 		);
 
 		this->camera_scale = std::clamp(this->camera_scale, 0.25f, 16.f);
+	}
+
+
+
+	void Level::ui() {
+		ui::Begin("Test");
+		ui::End();
 	}
 
 
