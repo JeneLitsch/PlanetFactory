@@ -9,3 +9,7 @@ add_library(level
 	Machine.cxx
 	ItemStorage.cxx
 )
+
+add_subdirectory(input)
+add_subdirectory(middle)
+add_subdirectory(output)

@@ -7,6 +7,7 @@
 #include "SFML/Graphics.hpp"
 
 namespace level {
+	struct Input;
 	struct Output : stx::non_copyable {
 		~Output() = default;
 
