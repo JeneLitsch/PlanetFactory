@@ -12,6 +12,7 @@ namespace level {
 
 	struct Machine {
 		stx::position2i position;
+		stx::position2i rotation;
 
 		std::unique_ptr<Input> input;
 		std::unique_ptr<Middle> middle;

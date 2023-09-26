@@ -7,6 +7,8 @@
 #include "Recipe.hxx"
 #include "core/calc_viewport.hxx"
 #include "imgui.h"
+#include "tool/Eraser.hxx"
+#include "tool/Place.hxx"
 
 namespace ui = ImGui;
 
@@ -14,24 +16,36 @@ namespace level {
 	Level::Level(stx::size2u size, std::uint64_t seed) 
 	: tiles{size, Tile{rock}}, tick {0.5} {
 		std::mt19937_64 rng{seed};
-
-		auto s1 = create_source({0,0}, item_yellow, 4);
-		auto s2 = create_source({1,1}, item_yellow, 4);
-
-		auto c1 = create_conveyor({0,1}, {*s1, *s2});
-		auto c2 = create_conveyor({0,2}, {*c1});
-		auto c3 = create_conveyor({0,3}, {*c2});
-		auto c4 = create_conveyor({0,4}, {*c3});
-
-		auto a1 = create_assembler({0,5}, {*c4}, yellow_to_red);
-
-		auto c5 = create_conveyor({0,6}, {*a1});
-		auto c6 = create_conveyor({0,7}, {*c5});
 		
-		auto x1 = create_container({0,8}, {*c6});
+		auto s1 = create_source({0,0}, {0,0}, item_yellow, 4);
+		auto s2 = create_source({1,1}, {0,0}, item_yellow, 4);
+
+		auto c1 = create_conveyor({0,1}, {0,0});
+		link_machines(*s1, *c1);
+		link_machines(*s2, *c1);
+
+		auto c2 = create_conveyor({0,2}, {0,0});
+		link_machines(*c1, *c2);
+		auto c3 = create_conveyor({0,3}, {0,0});
+		link_machines(*c2, *c3);
+		auto c4 = create_conveyor({0,4}, {0,0});
+		link_machines(*c3, *c4);
+
+		auto a1 = create_assembler({0,5}, {0,0}, yellow_to_red);
+		link_machines(*c4, *a1);
+
+		auto c5 = create_conveyor({0,6}, {0,0});
+		link_machines(*a1, *c5);
+		auto c6 = create_conveyor({0,7}, {0,0});
+		link_machines(*c5, *c6);
 		
-		auto c7 = create_conveyor({0,9}, {*x1});
-		auto c8 = create_conveyor({0,10}, {*c7});
+		auto x1 = create_container({0,8}, {0,0});
+		link_machines(*c6, *x1);
+		
+		auto c7 = create_conveyor({0,9}, {0,0});
+		link_machines(*x1, *c7);
+		auto c8 = create_conveyor({0,10}, {0,0});
+		link_machines(*c7, *c8);
 
 		this->machines.push_back(std::move(s1));
 		this->machines.push_back(std::move(s2));
@@ -101,6 +115,9 @@ namespace level {
 		if(sf::Keyboard::isKeyPressed(sf::Keyboard::E)) {
 			this->camera_scale += this->camera_scale * dt_f;
 		}
+		if(sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
+			this->tool = nullptr;
+		}
 
 		this->camera_center = stx::clamp(
 			this->camera_center,
@@ -113,8 +130,29 @@ namespace level {
 
 
 
-	void Level::ui() {
-		ui::Begin("Test");
+	void Level::ui(stx::size2f area_size) {
+		if(ui::Begin("Test", nullptr
+			, ImGuiWindowFlags_NoResize
+			| ImGuiWindowFlags_NoMove)) {
+			ui::SetWindowPos({0, 0.75f * area_size.y});
+			ui::SetWindowSize({area_size.x, 0.25f * area_size.y});
+			auto area = ui::GetContentRegionAvail();
+
+			if(ui::Button("Demolish", {area.x / 8.f, area.y})) {
+				this->tool = std::make_unique<Eraser>(this->machines);
+			}
+			ui::SameLine();
+			if(ui::Button("Conveyor", {area.x / 8.f, area.y})) {
+				this->tool = std::make_unique<Place>(this->machines);
+			}
+			ui::SameLine();
+		}
+		else {
+			ui::SetWindowFontScale(2);
+			ui::SetWindowPos({0, area_size.y - ui::GetWindowHeight()});
+			ui::SetWindowSize({area_size.x, ui::GetWindowHeight()});
+		}
+		ui::SetWindowFontScale(2);
 		ui::End();
 	}
 
@@ -129,6 +167,10 @@ namespace level {
 		render_tiles(this->tiles, render_target);
 		for(const auto & m : this->machines) {
 			render_machine(*m, render_target);
+		}
+
+		if(this->tool) {
+			this->tool->render(this->cursor_position, render_target);
 		}
 
 		render_target.setView(old_view);
@@ -148,6 +190,23 @@ namespace level {
 
 
 
+	void Level::on_event(const core::MouseMoved & event) {
+		const auto a = stx::position2f::from(event.window->mapPixelToCoords(event.position.to<sf::Vector2i>(), this->camera));
+		cursor_position = stx::position2i{stx::floor(a)};
+	}
+
+
+
+	void Level::on_event(const core::MouseButtonPressed & event) {
+		if(event.button == sf::Mouse::Left) {
+			if(this->tool) {
+				this->tool->apply(this->cursor_position);
+			}
+		}
+	}
+
+
+
 	void Level::on_event(const core::MouseScrolled & event) {
 		const auto a = stx::position2f::from(event.window->mapPixelToCoords(event.position.to<sf::Vector2i>(), this->camera));
 		const auto b = a - this->camera_center;
@@ -160,6 +219,13 @@ namespace level {
 		this->camera_center = this->camera_center + stx::position2f{offset_x, offset_y};
 		this->camera_scale = new_scale;
 		
-		std::cout << event.position << "->" << xy << " " << event.value << "\n";
+	}
+
+
+
+	void Level::on_event(const core::KeyPressed & event) {
+		if(event.code == sf::Keyboard::Key::R) {
+			if(this->tool) this->tool->rotate_cw();
+		}
 	}
 }

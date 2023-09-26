@@ -38,8 +38,8 @@ namespace core {
 
 
 
-	void StateManager::ui() {
-		if(!this->states.empty()) this->states.back()->ui();
+	void StateManager::ui(stx::size2f area_size) {
+		if(!this->states.empty()) this->states.back()->ui(area_size);
 	}	
 
 	

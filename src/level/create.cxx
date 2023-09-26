@@ -11,16 +11,11 @@
 
 
 namespace level {
-	void link(Machine & machine, const std::vector<stx::reference<Machine>> & prev) {
-		for(const auto & e : prev) {
-			machine.input->link(*e->output);
-		}
-	}
-
-	std::unique_ptr<Machine> create_conveyor(stx::position2i position, const std::vector<stx::reference<Machine>> & prev) {
+	std::unique_ptr<Machine> create_conveyor(stx::position2i position, stx::position2i rotation) {
 		auto machine = std::make_unique<Machine>();
 
 		machine->position = position;
+		machine->rotation = rotation;
 
 		machine->color = sf::Color{64,64,64};
 
@@ -28,17 +23,16 @@ namespace level {
 		machine->middle = std::make_unique<Pass>();
 		machine->output = std::make_unique<SimpleOutput>();
 
-		link(*machine, prev);
-
 		return machine;
 	}
 
 
 
-	std::unique_ptr<Machine> create_source(stx::position2i position, stx::reference<const Item> item, std::uint32_t delay) {
+	std::unique_ptr<Machine> create_source(stx::position2i position, stx::position2i rotation, stx::reference<const Item> item, std::uint32_t delay) {
 		auto machine = std::make_unique<Machine>();
 
 		machine->position = position;
+		machine->rotation = rotation;
 
 		machine->color = sf::Color::White;
 
@@ -51,10 +45,11 @@ namespace level {
 
 
 
-	std::unique_ptr<Machine> create_assembler(stx::position2i position, const std::vector<stx::reference<Machine>> & prev, stx::reference<const Recipe> recipe) {
+	std::unique_ptr<Machine> create_assembler(stx::position2i position, stx::position2i rotation, stx::reference<const Recipe> recipe) {
 		auto machine = std::make_unique<Machine>();
 
 		machine->position = position;
+		machine->rotation = rotation;
 
 		machine->color = sf::Color::White;
 
@@ -62,16 +57,16 @@ namespace level {
 		machine->middle = std::make_unique<Builder>(recipe);
 		machine->output = std::make_unique<SimpleOutput>();
 
-		link(*machine, prev);
 		return machine;
 	}
 
 
 
-	std::unique_ptr<Machine> create_container(stx::position2i position, const std::vector<stx::reference<Machine>> & prev) {
+	std::unique_ptr<Machine> create_container(stx::position2i position, stx::position2i rotation) {
 		auto machine = std::make_unique<Machine>();
 
 		machine->position = position;
+		machine->rotation = rotation;
 
 		machine->color = sf::Color{64,64,64};
 
@@ -79,7 +74,12 @@ namespace level {
 		machine->middle = std::make_unique<Pass>();
 		machine->output = std::make_unique<StorageOutput>();
 
-		link(*machine, prev);
 		return machine;
+	}
+
+
+
+	void link_machines(Machine & from, Machine & to) {
+		to.input->link(*from.output);
 	}
 }

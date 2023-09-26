@@ -13,3 +13,4 @@ add_library(level
 add_subdirectory(input)
 add_subdirectory(middle)
 add_subdirectory(output)
+add_subdirectory(tool)

@@ -35,7 +35,7 @@ void App::run() {
 		if (((static_cast<float>(sf::VideoMode::getFullscreenModes()[0].height)) / 1080.0f) > 1.5)
 			ImGui::GetFont()->Scale = 2;
 		this->state_manager.update(dt);
-		this->state_manager.ui();
+		this->state_manager.ui(stx::size2f::from(this->window.getSize()));
 		this->window.clear(sf::Color::Black);
 		this->state_manager.render(this->window);
 

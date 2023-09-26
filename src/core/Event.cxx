@@ -1,5 +1,6 @@
 #include "Event.hxx"
 #include "imgui-SFML.h"
+#include "imgui.h"
 
 namespace core {
 	namespace {
@@ -51,6 +52,8 @@ namespace core {
 		sf::Event event;
 		while(window.pollEvent(event)) {
             ImGui::SFML::ProcessEvent(event);
+			if(ImGui::GetIO().WantCaptureMouse) continue;
+			if(ImGui::GetIO().WantCaptureKeyboard) continue;
 			switch (event.type) {
 			case sf::Event::Closed: return event_closed(event);
 			case sf::Event::Resized: return event_window_resized(event, window);
