@@ -2,25 +2,13 @@
 
 namespace level {
 	void NoInput::prepare() {
-		
-	}
-
-
-
-	stx::optref<const Item> NoInput::peek_suplier() const {
-		return stx::nullref;
-	}
-
-
-
-	void NoInput::clear_suplier() {
 
 	}
 
 
 
-	void NoInput::store(stx::optref<const Item> item) {
-
+	bool NoInput::fetch_suply() {
+		return true;
 	}
 
 

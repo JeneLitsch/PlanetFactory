@@ -12,10 +12,7 @@ namespace level {
 
 		virtual void prepare() = 0;
 
-		virtual stx::optref<const Item> peek_suplier() const = 0;
-		virtual void clear_suplier() = 0;
-
-		virtual void store(stx::optref<const Item> item) = 0;
+		virtual bool fetch_suply() = 0;
 
 		virtual stx::optref<const Item> peek() const = 0;
 		virtual void clear() = 0;

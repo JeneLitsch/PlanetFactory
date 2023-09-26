@@ -4,9 +4,7 @@ namespace level {
 	namespace {
 		bool fetch(Machine & machine) {
 			if(machine.output->is_clear()) {
-				if(auto item = machine.input->peek_suplier()) {
-					machine.input->store(item);
-					machine.input->clear_suplier();
+				if(machine.input->fetch_suply()) {
 					return true;
 				}
 			}

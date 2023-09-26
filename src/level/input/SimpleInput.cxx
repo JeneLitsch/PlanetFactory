@@ -8,17 +8,14 @@ namespace level {
 		}
 	}
 
-	stx::optref<const Item> SimpleInput::peek_suplier() const {
-		if(std::empty(this->ports)) return stx::nullref;
-		return this->ports[this->index]->peek();
-	}
-
-	void SimpleInput::clear_suplier() {
-		this->ports[this->index]->clear();
-	}
-
-	void SimpleInput::store(stx::optref<const Item> item) {
-		this->item = item;
+	bool SimpleInput::fetch_suply() {
+		if(std::empty(this->ports)) return false;
+		if(auto item = this->ports[this->index]->peek()) {
+			this->item = item;
+			this->ports[this->index]->clear();
+			return true;
+		} 
+		return false;
 	}
 
 	stx::optref<const Item> SimpleInput::peek() const {
