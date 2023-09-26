@@ -1,5 +1,6 @@
 #include "create.hxx"
 #include "input/SimpleInput.hxx"
+#include "input/NoInput.hxx"
 
 #include "middle/Pass.hxx"
 #include "middle/Spawn.hxx"
@@ -41,7 +42,7 @@ namespace level {
 
 		machine->color = sf::Color::White;
 
-		machine->input = std::make_unique<SimpleInput>();
+		machine->input = std::make_unique<NoInput>();
 		machine->middle = std::make_unique<Spawn>(item);
 		machine->output = std::make_unique<SimpleOutput>();
 
