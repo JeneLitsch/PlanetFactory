@@ -17,9 +17,15 @@ namespace core {
 
 		void push(std::unique_ptr<GameState> state);
 		void pop();
-	private:
+		
 		virtual void on_event(const Closed &) {}
 		virtual void on_event(const WindowResized &) {}
+		virtual void on_event(const KeyPressed &) {}
+		virtual void on_event(const MouseMoved &) {}
+		virtual void on_event(const MouseButtonPressed &) {}
+		virtual void on_event(const MouseScrolled &) {}
+	private:
+
 		StateManager * state_manager = nullptr;
 	};
 }

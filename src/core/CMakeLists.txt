@@ -4,4 +4,5 @@ add_library(core
 	StateManager.cxx
 	GameState.cxx
 	Event.cxx
+	calc_viewport.cxx
 )

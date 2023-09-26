@@ -5,63 +5,12 @@
 #include "render.hxx"
 #include "create.hxx"
 #include "Recipe.hxx"
+#include "core/calc_viewport.hxx"
+
 namespace level {
 	Level::Level(stx::size2u size, std::uint64_t seed) 
 	: tiles{size, Tile{rock}}, tick {0.5} {
 		std::mt19937_64 rng{seed};
-
-		// this->machines.push_back(std::make_unique<Source>(stx::position2i{0,0}, item_blue));
-		// Machinery::Entity & s1 = *this->machines.back();
-
-		// this->machines.push_back(std::make_unique<Source>(stx::position2i{1,2}, item_yellow));
-		// Machinery::Entity & s2 = *this->machines.back();
-
-		// this->machines.push_back(std::make_unique<Conveyor>(stx::position2i{0,1}));
-		// Machinery::Entity & c1 = *this->machines.back();
-
-		// this->machines.push_back(std::make_unique<Conveyor>(stx::position2i{0,2}));
-		// Machinery::Entity & c2 = *this->machines.back();
-
-		// this->machines.push_back(std::make_unique<Conveyor>(stx::position2i{0,3}));
-		// Machinery::Entity & c3 = *this->machines.back();
-
-		// c3.link(c2);
-		// c2.link(c1);
-		// c2.link(s2);
-		// c1.link(s1);
-
-		// stx::reference<Machinery::Entity> prev = c3;
-
-		// for(int i = 0; i < 10; i++) {
-		// 	this->machines.push_back(std::make_unique<Conveyor>(stx::position2i{1 + i, 3}));
-		// 	stx::reference<Machinery::Entity> m = *this->machines.back();
-		// 	m->link(prev);
-		// 	prev = m;
-		// }
-
-
-		// this->machines.push_back(std::make_unique<Assembler>(stx::position2i{11, 3}, yellow_to_red));
-		// this->machines.back()->link(prev);
-		// prev = *this->machines.back();
-
-
-		// for(int i = 0; i < 10; i++) {
-		// 	this->machines.push_back(std::make_unique<Conveyor>(stx::position2i{12 + i, 3}));
-		// 	stx::reference<Machinery::Entity> m = *this->machines.back();
-		// 	m->link(prev);
-		// 	prev = m;
-		// }
-
-		// this->machines.push_back(std::make_unique<Stockpile>(stx::position2i{22, 3}));
-		// this->machines.back()->link(prev);
-		// prev = *this->machines.back();
-
-		// for(int i = 0; i < 5; i++) {
-		// 	this->machines.push_back(std::make_unique<Conveyor>(stx::position2i{23 + i, 3}));
-		// 	stx::reference<Machinery::Entity> m = *this->machines.back();
-		// 	m->link(prev);
-		// 	prev = m;
-		// }
 
 		auto s1 = create_source({0,0}, item_yellow, 4);
 		auto s2 = create_source({1,1}, item_yellow, 4);
@@ -121,20 +70,84 @@ namespace level {
 				m->tick_post();
 			}
 		}
+
+		this->update_camera(dt);
+	}
+
+
+
+	void Level::update_camera(double dt) {
+		const float dt_f = static_cast<float>(dt);
+		if(sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
+			this->camera_center.x -= dt_f * camera_speed * this->camera_scale;
+		}
+		if(sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+			this->camera_center.x += dt_f * camera_speed * this->camera_scale;
+		}
+		if(sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
+			this->camera_center.y -= dt_f * camera_speed * this->camera_scale;
+		}
+		if(sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+			this->camera_center.y += dt_f * camera_speed * this->camera_scale;
+		}
+		if(sf::Keyboard::isKeyPressed(sf::Keyboard::Q)) {
+			this->camera_scale -= this->camera_scale * dt_f;
+		}
+		if(sf::Keyboard::isKeyPressed(sf::Keyboard::E)) {
+			this->camera_scale += this->camera_scale * dt_f;
+		}
+
+		this->camera_center = stx::clamp(
+			this->camera_center,
+			stx::position2f{-2,-2},
+			stx::position2f{this->tiles.size()} + stx::position2f{1,1}
+		);
+
+		this->camera_scale = std::clamp(this->camera_scale, 0.25f, 16.f);
 	}
 
 
 
 	void Level::render(sf::RenderTarget & render_target) {
+		auto old_view = render_target.getView();
+		camera.setCenter(this->camera_center.to<sf::Vector2f>());
+		camera.setSize(16 * this->camera_scale, 9 * this->camera_scale);
+		render_target.setView(camera);
+
 		render_tiles(this->tiles, render_target);
 		for(const auto & m : this->machines) {
 			render_machine(*m, render_target);
 		}
+
+		render_target.setView(old_view);
 	}
 	
 	
 	
 	void Level::init() {
 		
+	}
+
+
+
+	void Level::on_event(const core::WindowResized & event)  {
+		this->camera.setViewport(core::calc_view_port(*event.window, this->camera));
+	}
+
+
+
+	void Level::on_event(const core::MouseScrolled & event) {
+		const auto a = stx::position2f::from(event.window->mapPixelToCoords(event.position.to<sf::Vector2i>(), this->camera));
+		const auto b = a - this->camera_center;
+		const auto xy = b;
+		
+		const float new_scale = this->camera_scale + camera_scroll_speed * (event.value * this->camera_scale);
+		const float scale_change =  new_scale - this->camera_scale;
+		const float offset_x = -(xy.x * scale_change) / new_scale; 
+		const float offset_y = -(xy.y * scale_change) / new_scale;
+		this->camera_center = this->camera_center + stx::position2f{offset_x, offset_y};
+		this->camera_scale = new_scale;
+		
+		std::cout << event.position << "->" << xy << " " << event.value << "\n";
 	}
 }
