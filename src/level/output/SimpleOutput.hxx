@@ -9,7 +9,6 @@ namespace level {
 		virtual bool is_clear() const override;
 		virtual stx::optref<const Item> peek() const override;
 		virtual void clear() override;
-		virtual void back_link(stx::reference<Input> succesor_input) override;
 		virtual void render(stx::position2i position, sf::RenderTarget & target) override;
 	private:
 		stx::optref<const Item> item;

@@ -22,6 +22,7 @@ namespace level {
 	}
 
 
+
 	void Machine::tick_pre() {
 		this->fetching_done = false;
 		this->production_done = false;
@@ -30,6 +31,8 @@ namespace level {
 		this->middle->prepare();
 		this->output->prepare();
 	}
+
+
 
 	bool Machine::tick_main() {
 		if(!this->fetching_done) {
@@ -41,6 +44,8 @@ namespace level {
 		}
 		return this->production_done && this->fetching_done;
 	}
+
+
 
 	void Machine::tick_post() {
 		if(this->output->is_clear()) {

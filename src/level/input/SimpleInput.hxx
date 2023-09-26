@@ -4,6 +4,7 @@
 namespace level {
 	class SimpleInput : public Input {
 	public:
+		virtual ~SimpleInput();
 
 		virtual void prepare() override;
 		virtual bool fetch_suply() override;

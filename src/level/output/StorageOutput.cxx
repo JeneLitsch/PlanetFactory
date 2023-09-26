@@ -39,12 +39,6 @@ namespace level {
 	
 
 
-	void StorageOutput::back_link(stx::reference<Input> succesor_input) {
-
-	}
-
-
-
 	void StorageOutput::render(stx::position2i position, sf::RenderTarget & target) {
 		for(std::int32_t i = 0; i < this->stack.get_amount(); i++) {
 			sf::RectangleShape item_rect;

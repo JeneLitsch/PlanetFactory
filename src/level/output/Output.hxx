@@ -1,5 +1,6 @@
 #pragma once
 #include <memory>
+#include <set>
 #include "stdxx/reference.hxx"
 #include "stdxx/math.hxx"
 #include "stdxx/oop.hxx"
@@ -9,7 +10,7 @@
 namespace level {
 	struct Input;
 	struct Output : stx::non_copyable {
-		~Output() = default;
+		virtual ~Output();
 
 		virtual void prepare() = 0;
 
@@ -19,8 +20,12 @@ namespace level {
 		virtual stx::optref<const Item> peek() const = 0;
 		virtual void clear() = 0;
 		
-		virtual void back_link(stx::reference<Input> succesor_input) = 0;
+		void back_link(stx::reference<Input> succesor_input);
+		void unlink(stx::reference<Input> succesor_input);
 
 		virtual void render(stx::position2i position, sf::RenderTarget & target) = 0;
+
+	private:
+		std::set<stx::reference<Input>> connected_inputs;
 	};
 }

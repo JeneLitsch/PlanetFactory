@@ -28,12 +28,6 @@ namespace level {
 	void SimpleOutput::clear() {
 		this->item = stx::nullref;
 	}
-	
-	
-	
-	void SimpleOutput::back_link(stx::reference<Input> succesor_input) {
-
-	}
 
 	
 	
