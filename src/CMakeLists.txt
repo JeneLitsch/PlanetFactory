@@ -1,6 +1,6 @@
 cmake_minimum_required (VERSION 3.8)
 
-add_compile_options("-std=c++20")
+add_compile_options("-std=c++20" "-g")
 
 add_executable(app main.cxx App.cxx)
 add_subdirectory(core)

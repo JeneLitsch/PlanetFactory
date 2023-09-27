@@ -27,11 +27,19 @@ namespace level {
 
 
 
-	void render_machine(const Machine & machine, sf::RenderTarget & target) {
+	void render_machine(const Machine & machine, sf::RenderTarget & target, sf::Texture & sprite_sheet, unsigned frame) {
 		sf::RectangleShape main_rect;
+
+		main_rect.setOrigin({0.5,0.5});
+
+		if(machine.rotation == stx::position2i{1,0})   main_rect.setRotation(90);
+		if(machine.rotation == stx::position2i{-1, 0}) main_rect.setRotation(270);
+		if(machine.rotation == stx::position2i{0, 1}) main_rect.setRotation(180);
+
 		main_rect.setSize({1,1});
-		main_rect.setFillColor(machine.color),
-		main_rect.setPosition(machine.position.x, machine.position.y);
+		main_rect.setPosition(machine.position.x + 0.5, machine.position.y + 0.5);
+		main_rect.setTexture(&sprite_sheet);
+		main_rect.setTextureRect({(machine.texture_position.x + static_cast<int>(frame)) * 16, (machine.texture_position.y) * 16, 16,16});
 		target.draw(main_rect);
 
 		machine.output->render(machine.position, target);

@@ -50,6 +50,6 @@ namespace level {
 
 
 	void SimpleInput::unlink(stx::reference<Output> suplier) {
-		ports.erase(std::remove(std::begin(this->ports), std::end(this->ports), suplier));
+		std::erase(this->ports, suplier);
 	}
 }

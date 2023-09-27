@@ -16,14 +16,29 @@ namespace level {
 		};
 		if(std::none_of(begin, end, pred)) {
 			this->machines->push_back(create_conveyor(position, this->get_rotation()));
+			auto & new_machine = this->machines->back();
 			for(std::unique_ptr<Machine> & m : *this->machines) {
-				if(m->position == position + this->get_rotation()) {
-					this->machines->back()->input->link(*m->output);
+				const auto own_input = new_machine->position + new_machine->rotation; 
+				const auto own_ouput = new_machine->position - new_machine->rotation;
+				const auto other_input = m->position + m->rotation;
+				const auto other_ouput = m->position - m->rotation;
+
+				if(m->position == own_input) {
+					link_machines(*m, *new_machine);
+				}
+				
+				if(m->position == own_ouput) {
+					link_machines(*new_machine, *m);
 				}
 
-				if(m->position + m->rotation == position) {
-					m->input->link(*this->machines->back()->output);
+				if(other_ouput == position) {
+					link_machines(*m, *new_machine);
 				}
+
+				if(other_input == position) {
+					link_machines(*new_machine, *m);
+				}
+
 			}
 		}
 	}
@@ -39,16 +54,28 @@ namespace level {
 		rect.setPosition(position.x, position.y);
 		target.draw(rect);
 
-		auto position_mini 
+		auto position_input 
 			= stx::position2f{position + this->get_rotation()}
 			+ stx::position2f{0.25f};
 
-		sf::RectangleShape mini_rect;
-		mini_rect.setSize({0.5f,0.5f});
-		mini_rect.setFillColor(sf::Color::Transparent);
-		mini_rect.setOutlineColor(sf::Color::Blue);
-		mini_rect.setOutlineThickness(-1.f/16.f);
-		mini_rect.setPosition(position_mini.to<sf::Vector2f>());
-		target.draw(mini_rect);
+		sf::RectangleShape input_rect;
+		input_rect.setSize({0.5f,0.5f});
+		input_rect.setFillColor(sf::Color::Red);
+		input_rect.setOutlineColor(sf::Color::Blue);
+		input_rect.setOutlineThickness(-1.f/16.f);
+		input_rect.setPosition(position_input.to<sf::Vector2f>());
+		target.draw(input_rect);
+
+		auto position_output 
+			= stx::position2f{position - this->get_rotation()}
+			+ stx::position2f{0.25f};
+
+		sf::RectangleShape ouput_rect;
+		ouput_rect.setSize({0.5f,0.5f});
+		ouput_rect.setFillColor(sf::Color::Green);
+		ouput_rect.setOutlineColor(sf::Color::Blue);
+		ouput_rect.setOutlineThickness(-1.f/16.f);
+		ouput_rect.setPosition(position_output .to<sf::Vector2f>());
+		target.draw(ouput_rect);
 	}
 }

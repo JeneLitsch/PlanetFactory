@@ -14,7 +14,7 @@ namespace ui = ImGui;
 
 namespace level {
 	Level::Level(stx::size2u size, std::uint64_t seed) 
-	: tiles{size, Tile{rock}}, tick {0.5} {
+	: tiles{size, Tile{rock}}, tick {0.5} , animation_tick {0.5 / 4.0} {
 		std::mt19937_64 rng{seed};
 		
 		auto s1 = create_source({0,0}, {0,0}, item_yellow, 4);
@@ -61,6 +61,8 @@ namespace level {
 		this->machines.push_back(std::move(c6));
 		this->machines.push_back(std::move(c7));
 		this->machines.push_back(std::move(c8));
+
+		this->sprite_sheet_machines.loadFromFile("./assets/machines.png");
 	}
 
 
@@ -88,6 +90,11 @@ namespace level {
 			for(const auto & m : this->machines) {
 				m->tick_post();
 			}
+		}
+
+		if(this->animation_tick(dt)) {
+			++this->animation_frame;
+			this->animation_frame %= 4;
 		}
 
 		this->update_camera(dt);
@@ -166,7 +173,7 @@ namespace level {
 
 		render_tiles(this->tiles, render_target);
 		for(const auto & m : this->machines) {
-			render_machine(*m, render_target);
+			render_machine(*m, render_target, sprite_sheet_machines, animation_frame);
 		}
 
 		if(this->tool) {

@@ -7,5 +7,5 @@
 
 namespace level {
 	void render_tiles(const stx::grid2<Tile> & tiles, sf::RenderTarget & target);
-	void render_machine(const Machine & machine, sf::RenderTarget & target);
+	void render_machine(const Machine & machine, sf::RenderTarget & target, sf::Texture & sprite_sheet, unsigned frame);
 }

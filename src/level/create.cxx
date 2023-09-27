@@ -16,6 +16,7 @@ namespace level {
 
 		machine->position = position;
 		machine->rotation = rotation;
+		machine->texture_position = {0,0};
 
 		machine->color = sf::Color{64,64,64};
 
@@ -33,6 +34,7 @@ namespace level {
 
 		machine->position = position;
 		machine->rotation = rotation;
+		machine->texture_position = {0,1};
 
 		machine->color = sf::Color::White;
 
@@ -50,6 +52,7 @@ namespace level {
 
 		machine->position = position;
 		machine->rotation = rotation;
+		machine->texture_position = {0,3};
 
 		machine->color = sf::Color::White;
 
@@ -67,6 +70,7 @@ namespace level {
 
 		machine->position = position;
 		machine->rotation = rotation;
+		machine->texture_position = {0,2};
 
 		machine->color = sf::Color{64,64,64};
 

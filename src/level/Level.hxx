@@ -30,6 +30,7 @@ namespace level {
 		std::vector<std::unique_ptr<Machine>> machines;
 		stx::grid2<Tile> tiles;
 		stx::chrono::every tick;
+		stx::chrono::every animation_tick;
 
 		sf::View camera;
 		constexpr static inline auto camera_speed = 15.f;
@@ -40,5 +41,8 @@ namespace level {
 		stx::position2i cursor_position = {0,0};
 
 		std::unique_ptr<Tool> tool = nullptr;
+
+		sf::Texture sprite_sheet_machines;
+		unsigned animation_frame = 0;
 	};
 }
