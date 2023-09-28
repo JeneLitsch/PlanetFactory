@@ -28,7 +28,10 @@ namespace level {
 		void update_camera(double dt);
 		
 		std::vector<std::unique_ptr<Machine>> machines;
-		stx::grid2<Tile> tiles;
+
+		stx::grid2<stx::optref<const Tile>> tiles;
+		stx::grid2<stx::optref<const Item>> resources;
+		
 		stx::chrono::every tick;
 		stx::chrono::every animation_tick;
 

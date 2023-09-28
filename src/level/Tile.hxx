@@ -3,19 +3,13 @@
 #include "stdxx/reference.hxx"
 
 namespace level {
-	struct TileType {
+	struct Tile {
 		sf::Color color;
 	};
 
 	
 	
-	struct Tile {
-		stx::optref<const TileType> type;
-	};
-
-	
-	
-	inline const TileType rock {
+	inline const Tile rock {
 		.color = sf::Color{128,128,128},
 	};
 }

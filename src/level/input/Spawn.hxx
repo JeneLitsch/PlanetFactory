@@ -4,7 +4,7 @@
 namespace level {
 	struct Spawn : public Input {
 	public:
-		Spawn(stx::reference<const Item> item);
+		Spawn(stx::optref<const Item> item);
 
 		virtual void prepare() override;
 		virtual bool fetch_suply() override;
@@ -14,7 +14,7 @@ namespace level {
 		virtual void unlink(stx::reference<Output> suplier) override;
 
 	private:
-		stx::reference<const Item> item;
+		stx::optref<const Item> item;
 		std::uint32_t counter = 0;
 		std::uint32_t delay = 4;
 	};

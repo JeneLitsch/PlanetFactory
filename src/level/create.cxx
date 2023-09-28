@@ -29,7 +29,7 @@ namespace level {
 
 
 
-	std::unique_ptr<Machine> create_source(stx::position2i position, stx::position2i rotation, stx::reference<const Item> item, std::uint32_t delay) {
+	std::unique_ptr<Machine> create_source(stx::position2i position, stx::position2i rotation, stx::optref<const Item> item, std::uint32_t delay) {
 		auto machine = std::make_unique<Machine>();
 
 		machine->position = position;

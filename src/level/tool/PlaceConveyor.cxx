@@ -1,14 +1,14 @@
-#include "Place.hxx"
+#include "PlaceConveyor.hxx"
 #include <algorithm>
 #include "level/create.hxx"
 
 namespace level {
-	Place::Place(stx::reference<std::vector<std::unique_ptr<Machine>>> machines) 
+	PlaceConveyor::PlaceConveyor(stx::reference<std::vector<std::unique_ptr<Machine>>> machines) 
 		: machines{machines} {}
 	
 
 
-	void Place::apply(stx::position2i position) {
+	void PlaceConveyor::apply(stx::position2i position) {
 		auto begin = std::begin(*this->machines);
 		auto end = std::end(*this->machines);
 		auto pred = [&] (const auto & machine) {
@@ -45,7 +45,7 @@ namespace level {
 
 
 
-	void Place::render(stx::position2i position, sf::RenderTarget & target) {
+	void PlaceConveyor::render(stx::position2i position, sf::RenderTarget & target) {
 		sf::RectangleShape rect;
 		rect.setSize({1.f,1.f});
 		rect.setFillColor(sf::Color::Transparent);

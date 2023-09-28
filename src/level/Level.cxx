@@ -8,13 +8,19 @@
 #include "core/calc_viewport.hxx"
 #include "imgui.h"
 #include "tool/Eraser.hxx"
-#include "tool/Place.hxx"
+#include "tool/PlaceConveyor.hxx"
 
 namespace ui = ImGui;
 
 namespace level {
 	Level::Level(stx::size2u size, std::uint64_t seed) 
-	: tiles{size, Tile{rock}}, tick {0.5} , animation_tick {0.5 / 4.0} {
+	: tiles{size, rock}
+	, resources{size, stx::nullref}
+	, tick {0.5}
+	, animation_tick {0.5 / 4.0} {
+
+		this->resources(5,5) = item_blue;
+
 		std::mt19937_64 rng{seed};
 		
 		auto s1 = create_source({0,0}, {0,0}, item_yellow, 4);
@@ -150,7 +156,7 @@ namespace level {
 			}
 			ui::SameLine();
 			if(ui::Button("Conveyor", {area.x / 8.f, area.y})) {
-				this->tool = std::make_unique<Place>(this->machines);
+				this->tool = std::make_unique<PlaceConveyor>(this->machines);
 			}
 			ui::SameLine();
 		}
@@ -172,6 +178,7 @@ namespace level {
 		render_target.setView(camera);
 
 		render_tiles(this->tiles, render_target);
+		render_resources(this->resources, render_target);
 		for(const auto & m : this->machines) {
 			render_machine(*m, render_target, sprite_sheet_machines, animation_frame);
 		}

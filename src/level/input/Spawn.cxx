@@ -1,7 +1,7 @@
 #include "Spawn.hxx"
 
 namespace level {
-	Spawn::Spawn(stx::reference<const Item> item) : item {item} {}
+	Spawn::Spawn(stx::optref<const Item> item) : item {item} {}
 
 
 
