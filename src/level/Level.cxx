@@ -14,12 +14,16 @@ namespace ui = ImGui;
 
 namespace level {
 	Level::Level(stx::size2u size, std::uint64_t seed) 
-	: tiles{size, rock}
-	, resources{size, stx::nullref}
+	: GameState{}
+	, planet {
+		.machines = {},
+		.tiles = {size, rock},
+		.resources = {size, stx::nullref},
+	}
 	, tick {0.5}
 	, animation_tick {0.5 / 4.0} {
 
-		this->resources(5,5) = item_blue;
+		this->planet.resources(5,5) = item_blue;
 
 		std::mt19937_64 rng{seed};
 		
@@ -53,20 +57,20 @@ namespace level {
 		auto c8 = create_conveyor({0,10}, {0,0});
 		link_machines(*c7, *c8);
 
-		this->machines.push_back(std::move(s1));
-		this->machines.push_back(std::move(s2));
+		this->planet.machines.push_back(std::move(s1));
+		this->planet.machines.push_back(std::move(s2));
 		
-		this->machines.push_back(std::move(a1));
-		this->machines.push_back(std::move(x1));
+		this->planet.machines.push_back(std::move(a1));
+		this->planet.machines.push_back(std::move(x1));
 
-		this->machines.push_back(std::move(c1));
-		this->machines.push_back(std::move(c2));
-		this->machines.push_back(std::move(c3));
-		this->machines.push_back(std::move(c4));
-		this->machines.push_back(std::move(c5));
-		this->machines.push_back(std::move(c6));
-		this->machines.push_back(std::move(c7));
-		this->machines.push_back(std::move(c8));
+		this->planet.machines.push_back(std::move(c1));
+		this->planet.machines.push_back(std::move(c2));
+		this->planet.machines.push_back(std::move(c3));
+		this->planet.machines.push_back(std::move(c4));
+		this->planet.machines.push_back(std::move(c5));
+		this->planet.machines.push_back(std::move(c6));
+		this->planet.machines.push_back(std::move(c7));
+		this->planet.machines.push_back(std::move(c8));
 
 		this->sprite_sheet_machines.loadFromFile("./assets/machines.png");
 	}
@@ -77,23 +81,23 @@ namespace level {
 
 	void Level::update(double dt) {
 		if(this->tick(dt)) {
-			for(const auto & m : this->machines) {
+			for(const auto & m : this->planet.machines) {
 				m->tick_pre();
 			}
-            std::size_t tries = std::size(this->machines);
+            std::size_t tries = std::size(this->planet.machines);
 
             while (tries > 0) {
                 --tries;
 				bool done = true;
 				
-				for(const auto & m : this->machines) {
+				for(const auto & m : this->planet.machines) {
 					done &= m->tick_main();
 				}
 
 				if(done) break;
             }
 
-			for(const auto & m : this->machines) {
+			for(const auto & m : this->planet.machines) {
 				m->tick_post();
 			}
 		}
@@ -135,7 +139,7 @@ namespace level {
 		this->camera_center = stx::clamp(
 			this->camera_center,
 			stx::position2f{-2,-2},
-			stx::position2f{this->tiles.size()} + stx::position2f{1,1}
+			stx::position2f{this->planet.tiles.size()} + stx::position2f{1,1}
 		);
 
 		this->camera_scale = std::clamp(this->camera_scale, 0.25f, 16.f);
@@ -152,11 +156,11 @@ namespace level {
 			auto area = ui::GetContentRegionAvail();
 
 			if(ui::Button("Demolish", {area.x / 8.f, area.y})) {
-				this->tool = std::make_unique<Eraser>(this->machines);
+				this->tool = std::make_unique<Eraser>(this->planet.machines);
 			}
 			ui::SameLine();
 			if(ui::Button("Conveyor", {area.x / 8.f, area.y})) {
-				this->tool = std::make_unique<PlaceConveyor>(this->machines);
+				this->tool = std::make_unique<PlaceConveyor>(this->planet.machines);
 			}
 			ui::SameLine();
 		}
@@ -177,9 +181,9 @@ namespace level {
 		camera.setSize(16 * this->camera_scale, 9 * this->camera_scale);
 		render_target.setView(camera);
 
-		render_tiles(this->tiles, render_target);
-		render_resources(this->resources, render_target);
-		for(const auto & m : this->machines) {
+		render_tiles(this->planet.tiles, render_target);
+		render_resources(this->planet.resources, render_target);
+		for(const auto & m : this->planet.machines) {
 			render_machine(*m, render_target, sprite_sheet_machines, animation_frame);
 		}
 

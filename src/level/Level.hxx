@@ -8,6 +8,7 @@
 #include "level/Item.hxx"
 #include "Machine.hxx"
 #include "tool/Tool.hxx"
+#include "Planet.hxx"
 
 namespace level {
 	class Level : public core::GameState {
@@ -27,10 +28,7 @@ namespace level {
 	private:
 		void update_camera(double dt);
 		
-		std::vector<std::unique_ptr<Machine>> machines;
-
-		stx::grid2<stx::optref<const Tile>> tiles;
-		stx::grid2<stx::optref<const Item>> resources;
+		Planet planet;
 		
 		stx::chrono::every tick;
 		stx::chrono::every animation_tick;
